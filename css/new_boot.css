@@ -1,0 +1,52 @@
+/*
+* Olga
+* Special styles for WBS buttons
+*/
+
+#WBS .actions button{
+  padding: 0px;
+  border: none;
+  cursor: pointer;
+}
+
+#WBS button, #WBS input,
+#WBS .input-group-addon, #WBS .input-group{
+  padding: 0px;
+  margin: 0px;
+  line-height: 20px;
+}
+
+#WBS select{
+  padding: 0px 20px 0px 0px;
+  margin: 0px;
+  line-height: 20px;
+}
+
+
+#WBS select.form-control:not([size]):not([multiple]){
+  height: auto;
+}
+
+#WBS td.title{
+  width: 25%;
+}
+
+#WBS td.level{
+  width: 10%;
+}
+
+#WBS td.cost{
+  width: 15%;
+}
+
+#WBS td.time{
+  width: 5%;
+}
+
+#WBS td.scale_time{
+  width: 10%;
+}
+
+#WBS td.thousand{
+  width: 5%;
+}

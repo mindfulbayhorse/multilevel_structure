@@ -1,0 +1,8 @@
+th.actions button{
+  height: 28px;
+  width: 28px;
+}
+
+th.actions button.new_but{
+	background-image: url('../img/new.png');
+}
