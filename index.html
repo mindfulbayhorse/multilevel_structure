@@ -10,58 +10,65 @@
 	<title>Bootstrap responsive grid</title>
 </head>
 <body>
-  <div class="container-fluid">
-    <div class="row">
-        <div class="col-2">Left side bar</div>
-        <div class="col-8">
-              <div>
-                <table id="WBS" class="table-striped table table-bordered table-hover table-condensed table-sm">
-                  <caption>
-                      <p class="title">Work break down structure</p>
-                      <p class="description">The table shows all deliverables for project in the tree</p>
-                  </caption>
-                  <thead class="thead-light">
-                		<tr>
-                		    <td></td>
-                		    <th>Level</th>
-                		    <th>Title</th>
-                		    <th>Duration</th>
-                        <th>Time scale</th>
-                		    <th>Cost (AU)</th>
-                        <th>Thousands (K)</th>
-                		    <th></th>
-                		</tr>
-                  </thead>
-                  <tbody id="structure_1">
-                    <tr id="lev_1">
-                			<th class="actions">
-                        <div class="btn-toolbar" role="toolbar">
-                          <div class="btn-group btn-group-sm mr-2" role="group">
-                    				<button class="new btn btn-secondary" type="button" form="delivery"><img 
-                                  src="img/new.png" width="27" height="27" /></button>
-                            <button class="edit btn btn-secondary"  type="button" form="delivery">
-                                <img src="img/Edit_start.png" width="27" height="27" /></button>
-                            <button class="move_up btn btn-secondary period" type="button" form="delivery">
-                              <img src="img/edit_end.png" width="27" height="27" /></button>
-                          </div>
-                          <div class="btn-group btn-group-sm mr-2" role="group">
-                            <button class="level_down btn btn-secondary" type="button" form="delivery">
-                              <img src="img/level_down.png" width="27" height="27" /></button>
-                    				<button class="level_up btn btn-secondary" type="button" form="delivery">
-                              <img src="img/level_up.png" width="27" height="27" /></button>
-                          </div>
-                          <div class="btn-group btn-group-sm mr-2" role="group">
-                            <button class="move_down btn btn-outline-secondary" type="button" form="delivery">
-                              <img src="img/move_down.png" width="27" height="27" /></button>
-                            <button class="move_up btn btn-outline-secondary" type="button" form="delivery">
-                              <img src="img/move_up.png" width="27" height="27" /></button>
-                          </div>
-                          <div class="btn-group btn-group-sm" role="group">
-                            <button class="tree_but btn btn-secondary" type="button" form="delivery">
-                            <img src="img/tree_open.png" width="27" height="27" />
-                          </button>
-                          </div>
-                         </div>	
+  	<div class="container-fluid">
+    	<div class="row">
+        	<div class="col-2">Left side bar</div>
+        	<div class="col-8">
+              	<div>
+                	<table id="WBS" class="table-striped table table-bordered table-hover table-condensed table-sm">
+                  		<caption>
+                      		<p class="title">Work break down structure</p>
+                      		<p class="description">The table shows all deliverables for project in the tree</p>
+                  		</caption>
+                  		<thead class="thead-light">
+	                		<tr>
+	                		    <td></td>
+	                		    <th>Level</th>
+	                		    <th>Title</th>
+	                		    <th>Duration</th>
+	                        	<th>Time scale</th>
+	                		    <th>Cost (AU)</th>
+	                        	<th>Thousands (K)</th>
+	                		    <th></th>
+	                		</tr>
+                  		</thead>
+                  		<tbody id="structure_1">
+                    		<tr id="lev_1">
+                				<th class="actions">
+                        			<div class="btn-toolbar" role="toolbar">
+                          				<div class="btn-group btn-group-sm mr-2" role="group">
+											<button class="new btn btn-secondary" name="create" type="button" form="delivery">
+											   <img src="img/new.png" title="Create" width="27" height="27" />
+						   					</button>
+                            				<button class="edit btn btn-secondary"  type="button" name="eidt" form="delivery">
+                            					<img src="img/Edit_start.png" title="Edit" width="27" height="27" />
+											</button>
+      										<button class="move_up btn btn-secondary period" name="save" type="button" form="delivery">
+                              					<img src="img/edit_end.png" title="Save" width="27" height="27" />
+									  		</button>
+                          				</div>
+                          				<div class="btn-group btn-group-sm mr-2" role="group">
+                            				<button class="level_down btn btn-secondary" name="descend" type="button" form="delivery">
+                            					<img src="img/level_down.png" title="Lower" width="27" height="27" />
+											</button>
+                    						<button class="level_up btn btn-secondary" name="ascend" type="button" form="delivery">
+												<img src="img/level_up.png" width="27" title="Ascend" height="27" />
+									  		</button>
+                          				</div>
+                          				<div class="btn-group btn-group-sm mr-2" role="group">
+											<button class="move_down btn btn-outline-secondary" name="lower" type="button" form="delivery">
+												<img src="img/move_down.png" width="27" title="Lower" height="27" />
+											</button>
+											<button class="move_up btn btn-outline-secondary" name="lift" type="button" form="delivery">
+												<img src="img/move_up.png" width="27" height="27" />
+											</button>
+										</div>
+                          				<div class="btn-group btn-group-sm" role="group">
+                            				<button class="tree_but btn btn-secondary" type="button" form="delivery">
+												<img src="img/tree_open.png" width="27" height="27" />
+										</button>
+									</div>
+								</div>	
                 			</th>
                 			<td class="level">1</td>
                 			<td class="title">
