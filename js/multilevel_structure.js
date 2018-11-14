@@ -17,6 +17,7 @@
         prefixRowId: "deliv",
         idAttribute: "id",
         levelSeparator: "_",
+        onSave: function(elem){ return true},
         fields: ["title","cost","period"], 
       };
       
@@ -49,6 +50,9 @@
             case constant.buttons[1]:
                 stateNew(current_row);
                 break;
+            case constant.buttons[3]:
+                stateSave(current_row);
+                break;
             case constant.buttons[6]:
                 stateLevelDown(current_row);
                 break;
@@ -58,9 +62,9 @@
 
       };
       
-      //edit start button action to make any field edible
-      var stateEdit = function(current_row)
-			{
+        //edit start button action to make any field edible
+        var stateEdit = function(current_row)
+        {
           //set current row active
           $(current_row).parent().children().removeClass(settings.activeRow);
           $(current_row).addClass(settings.activeRow);
@@ -72,31 +76,39 @@
            //focus to only first element
           $(current_row).find(constant.valSelector).first().focus();
           //another button for saving the value must be changed to active state
-          
-			};
+        
+        };
+            
+     
       
       
       //new row is added into the table
       var stateNew = function(current_row)
       {
-        //clonning the current row on lower position with the same level
-        var rowNew = $(current_row).clone(true).insertAfter(current_row);
-        
-        rowNew.attr(settings.idAttribute,generateLevel($(current_row).attr(settings.idAttribute)));
-        
-        //all values of the new row must be empty
-        for (i = 0, len = settings.fields.length; i < len; i++) {
-            rowNew.find(constant.valSelector+'.'+settings.fields[i]).val('');
-        }
-        stateEdit(rowNew);
-        
-        var nextRow=$(rowNew).next();
-       
-        while($(nextRow).index()>0)
+        //changing the styles of the row and make the input fields read only
+        var doSave=settings.onSave(current_row);
+        if(doSave===true)
         {
-          $(nextRow).attr(settings.idAttribute,generateLevel($(nextRow).attr(settings.idAttribute)));
-          nextRow=$(nextRow).next();
+            //clonning the current row on lower position with the same level
+            var rowNew = $(current_row).clone(true).insertAfter(current_row);
+            
+            rowNew.attr(settings.idAttribute,generateLevel($(current_row).attr(settings.idAttribute)));
+            
+            //all values of the new row must be empty
+            for (i = 0, len = settings.fields.length; i < len; i++) {
+                rowNew.find(constant.valSelector+'.'+settings.fields[i]).val('');
+            }
+            stateEdit(rowNew);
+            
+            var nextRow=$(rowNew).next();
+           
+            while($(nextRow).index()>0)
+            {
+              $(nextRow).attr(settings.idAttribute,generateLevel($(nextRow).attr(settings.idAttribute)));
+              nextRow=$(nextRow).next();
+            }
         }
+
       }
       
       //current row is saved with ajax request
