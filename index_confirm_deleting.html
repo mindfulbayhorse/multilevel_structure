@@ -3,10 +3,12 @@
 <head>
 	<meta http-equiv="content-type" content="text/html" />
 	<meta name="author" content="Olga Zhilkova" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
     <link href="css\new_boot.css" rel="stylesheet" type="text/css" />
     <script src="js\jquery-3.2.1.min.js"></script>
     <script src="js\multilevel_structure.js"></script>
-	<title>Origin html structure for visual</title>
+    <script src="js\validateForm.js"></script>
+	<title>Bootstrap responsive grid</title>
 </head>
 <body>
   	<div class="container-fluid">
@@ -36,13 +38,13 @@
                 				<th class="actions">
                         			<div class="btn-toolbar" role="toolbar">
                           				<div class="btn-group btn-group-sm mr-2" role="group">
-											<button class="new btn" name="create" type="button" form="delivery">
+											<button class="new btn btn-secondary" name="create" type="button" form="delivery">
 											   <img src="img/new.png" title="Create" width="27" height="27" />
 						   					</button>
                             				<button class="edit btn btn-secondary"  type="button" name="eidt" form="delivery">
                             					<img src="img/Edit_start.png" title="Edit" width="27" height="27" />
 											</button>
-      										<button class="move_up btn period" name="save" type="button" form="delivery">
+      										<button class="save btn btn-secondary period" name="save" type="button" form="delivery">
                               					<img src="img/edit_end.png" title="Save" width="27" height="27" />
 									  		</button>
                           				</div>
@@ -71,29 +73,29 @@
                 			</th>
                 			<td class="level">1</td>
                 			<td class="title">
-                          <input type="text" class="title form-control" readonly="readonly" form="deliverable" title="Title" aria-label="Title"/>
+                          <input type="text" data-required="true" class="title form-control" required readonly="readonly" value="Development" form="deliverable" title="Title" aria-label="Title"/>
                       </td>
                 			<td class="time">
-                        <input type="text" value="" readonly="readonly" class="period form-control" form="deliverable" readonly="readonly" />     
+                        <input type="text" value="18" data-required="true" required class="period form-control" form="deliverable" readonly="readonly" />     
                       </td>
                       <td class="scale_time">
-                        <select class="form-control">
-                          <option>hours</option>
+                        <select class="form-control" data-required="true">
+                          <option selected="selected">hours</option>
                           <option>days</option>
                           <option>weeks</option>
                           <option>months</option>
                         </select>
                       </td>
                 			<td class="cost">
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text">$</span>
-                          </div>
-                          <input class="span2 cost form-control" type="text" readonly="readonly" value="0">
-                          <div class="input-group-append">
-                            <span class="input-group-text">.00</span>
-                          </div>
-                        </div>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                              </div>
+                              <input class="span2 cost form-control" type="text" readonly="readonly" value="0">
+                              <div class="input-group-append">
+                                <span class="input-group-text">.00</span>
+                              </div>
+                            </div>
                       </td>
                       <td class="thousand">
                         <input type="checkbox" name="thousand_1" class="thousand form-check-input" readonly="readonly"/>
@@ -135,15 +137,15 @@
                 			</th>
                 			<td class="level">2</td>
                 			<td class="title">
-                        <input type="text" class="title form-control" value="Content" readonly="readonly" form="deliverable" title="Title" aria-label="Title"/>
+                        <input type="text" data-required="true" class="title form-control" value="Content" readonly="readonly" form="deliverable" title="Title" aria-label="Title"/>
                       </td>
                 			<td class="time">
-                        <input type="text" value="" readonly="readonly" class="period form-control" form="deliverable" readonly="readonly" />     
+                        <input type="text" value="20" data-required="true" readonly="readonly" class="period form-control" form="deliverable" readonly="readonly" />     
                       </td>
                       <td>
-                        <select class="form-control">
+                        <select class="form-control"data-required="true" >
                           <option>hours</option>
-                          <option>days</option>
+                          <option selected="selected">days</option>
                           <option>weeks</option>
                           <option>months</option>
                         </select>
@@ -200,17 +202,17 @@
                 			</th>
                 			<td class="level">3</td>
                 			<td>
-                        <input type="text" value="Design" class="title form-control" readonly="readonly" form="deliverable" title="Title" aria-label="Title"/>
+                        <input type="text" data-required="true" value="Design" class="title form-control" readonly="readonly" form="deliverable" title="Title" aria-label="Title"/>
                       </td>
                 			<td class="time">
-                        <input type="text" value="67" readonly="readonly" class="period form-control" form="deliverable" readonly="readonly" />     
+                        <input type="text" data-required="true" value="7" readonly="readonly" class="period form-control" form="deliverable" readonly="readonly" />     
                       </td>
                       <td>
-                        <select class="form-control">
+                        <select class="form-control" data-required="true">
                           <option>hours</option>
                           <option>days</option>
                           <option>weeks</option>
-                          <option>months</option>
+                          <option selected="selected">months</option>
                         </select>
                       </td>
                 			<td class="cost">
@@ -238,10 +240,10 @@
         </div>
         <div class="col-2">Right side bar</div>
     </div>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
 <script>
 $(document).ready(function(){
-  $('#WBS .actions button').multilevelStructure();
-  //var carousel = new myPrimeBanner().init({selector: ".carousel"});
+  $('#WBS .actions button').multilevelStructure({onSave: function(elem){return elem.validate({submit: 'button.save'}); } });
 });
 </script>
 <form id="deliverable" name="deliverable" method="GET" action="">
