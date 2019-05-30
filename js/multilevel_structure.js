@@ -50,69 +50,128 @@
 		this._defauls = defaults;
 		this._name = pluginName;
     this.init();
-	}
-	
+	}	
 	
 	Plugin.prototype.init = function ()
 	{
 		let self = this;	   
-		$(this.element).click(function(){
-		  
-		   if ($(this).hasClass('new'))
-		     self.addDeliverable(self.settings);
-		   
-		   if ($(this).hasClass('level_down'))
-         self.decreaseLevel(self.settings);
-		   
-		});
+		$(this.element).click(updateActions);
+
+	}
+	
+	const updateActions = function(){
+	  
+	  if($(this).hasClass('new') === true)
+	      addDeliverable($(this));
+	  
+	  if($(this).hasClass('level_down') === true)
+	    decreaseLevel($(this));
+	  
 	}
 	
 	
     //new row is added into the table
-	Plugin.prototype.addDeliverable = function(settings)
+	  const addDeliverable = function(btn)
     {
-      //changing the styles of the row and make the input fields read only
-      //let doSave=settings.onSave(current_row);
-      //if(doSave===true)
-      //{
-	  
-		  let current_row=$(this.element).closest('tr');
+	    
+	    let settings = $(btn).data('plugin_' + pluginName).settings;
+		  let current_row=$(btn).closest('tr');
+		  
+		  
+		  letNewID = increaseOrderNumber($(current_row).attr(idAttribute));
+		  
+		  
+		  let btns =  $(deliverableTemplate())
+		    .attr(idAttribute,letNewID)
+		    .insertAfter(current_row)
+		    .find('button');	  
+		  
+		  
+		  //try to use function name instead
+		  $(btns).each(function(){
+		    
+		    if ( !$.data(this, "plugin_" + pluginName )) {
+	        $.data(this, "plugin_" + pluginName,
+	        new Plugin(this, settings ));
+		    }
+		  });
+	
+		  
+		  
+		   
+		   let rowNew = $('#'+letNewID);
 
-          //clonning the current row on lower position with the same level
-          let rowNew = $(current_row).attr(idAttribute,increaseOrderNumber($(current_row).attr(idAttribute))).clone(true).insertAfter(current_row);
-          
-          //$(rowNew).attr(idAttribute,increaseOrderNumber($(current_row).attr(idAttribute)));
-          
-          console.log($(rowNew).attr('id'));
-          
-          //all values of the new row must be empty
-          for (i = 0, len = settings.fields.length; i < len; i++) {
-              rowNew.find(structure.fieldEl + '.' + settings.fields[i]).val('');
-          }
           stateEdit(rowNew,settings);
           
           let nextRow=$(rowNew).next();
+          
          
           while($(nextRow).index()>0)
           {
             $(nextRow).attr(idAttribute,increaseOrderNumber($(nextRow).attr(idAttribute)));
             nextRow = $(nextRow).next();
           }
-      //}
 
     }
 	
 	
+	/*
+	 * Template for WBS deliverable
+	 */
+	const deliverableTemplate = function()
+	{
+	  return '<tr>'+
+      '<th class="actions">'+
+      '<button class="new" name="create" type="button" form="delivery"><img src="img/new.png" title="Create" width="27" height="27" /></button>'+
+      '<button class="edit"  type="button" name="eidt" form="delivery"><img src="img/Edit_start.png" title="Edit" width="27" height="27" /></button>'+
+      '<button class="move_up" name="save" type="button" form="delivery"><img src="img/edit_end.png" title="Save" width="27" height="27" /></button>'+
+      '<button class="level_down" name="descend" type="button" form="delivery"><img src="img/level_down.png" title="Lower" width="27" height="27" /></button>'+
+      '<button class="level_up" name="ascend" type="button" form="delivery"><img src="img/level_up.png" width="27" title="Ascend" height="27" /></button>'+
+      '<button class="move_down" name="lower" type="button" form="delivery"><img src="img/move_down.png" width="27" title="Lower" height="27" />'+
+      '<button class="move_up" name="lift" type="button" form="delivery"><img src="img/move_up.png" width="27" height="27" /></button>'+
+      '<button class="tree_but btn btn-secondary" type="button" form="delivery"><img src="img/tree_open.png" width="27" height="27" /></button>'+  
+      '</th>'+
+   '<td class="level">1</td>'+
+   '<td class="title">'+
+    '<input type="text" class="title form-control" readonly="readonly" form="deliverable" title="Title" aria-label="Title"/>'+
+  '</td>'+
+  '<td class="time">'+
+  '<input type="text" value="" readonly="readonly" class="period form-control" form="deliverable" readonly="readonly" />     '+
+  '</td>'+
+  '<td class="scale_time">'+
+  '<select class="form-control">'+
+   '<option>hours</option>'+
+    '<option>days</option>'+
+    '<option>weeks</option>'+
+    '<option>months</option>'+
+    '</select>'+
+   '</td>'+
+   '<td class="cost">'+
+    '<input class="span2 cost form-control" type="text" readonly="readonly" value="0">'+
+  '</td>'+
+  '<td class="thousand">'+
+  '<input type="checkbox" name="thousand_1" class="thousand form-check-input" readonly="readonly"/>'+
+  '</td>'+
+  '<th class="actions">'+
+    '<button class="move_down btn btn-outline-secondary btn-sm" type="button" form="delivery">'+
+    '<img src="img/delete.png" width="27" height="27" /></button> '+
+   '</th>'
+   '</tr>';
+	}
+	
+
+	
 	  /*
      * Changing level of the entry to make as a subdirectory of the parent entry
      */
-     Plugin.prototype.decreaseLevel = function(settings)
+     const decreaseLevel = function(e)
      {
+       
+       let actionBtn = e || this;
          
-       let currentRow = $(this.element).closest('tr');
-       //console.log(currentRow);
-       //console.log($(currentRow).attr('id'));
-       let currentId = $(this.element).closest('tr').attr(idAttribute);
+       let currentRow = $(actionBtn).closest('tr');
+
+       let currentId = $(actionBtn).closest('tr').attr(idAttribute);
        let currentLevel = getLevel(currentId);
        let currentOrder = findOrderNumber(currentId);
        
@@ -126,8 +185,8 @@
        //must be tested with the level more than first
        let similarLevel = new RegExp('^' + levelPrexif + previousNumber + '$');
        
-       let rowSearch = $(this.element).closest('tbody').find('tr').toArray();
-       //console.log(rowSearch);
+       let rowSearch = $(actionBtn).closest('tbody').find('tr').toArray();
+
          
        let i=0;
        
