@@ -4,11 +4,118 @@
  * Author: Olga Zhilkova
  * Version: 1.0 
  */
-;(function ( $, window, document, undefined ) {
+let  Entry = function ( ID, fields ) {
+    
+    this.ID = ID;
+    //if (fields['level'])
+    this.fields = fields;
+    
+};
+  
+let  entryFactory = (function () {
+    let entriesPool = {}, existingEntry;
+    
+    return {
+      createEntry: function ( entryID, fields ) {
+   
+        existingEntry = existingEntry[ entryID ];
+        if ( !!existingEntry ) {
+          return existingEntry;
+        } else {
+   
+          let entry = new Entry( entryID, fields );
+          entriesPool[entryID] = book;
+          return entry;
+   
+        }
+      }
+  }
+    
+})();
+
+let managerEntries = (function () {
+  let entryProcesses = {};  
+  
+  /*
+   * initializing action for whole table onsisting of the data
+   */
+  let init = function ( options ) {
+    
+    this.settings = $.extend( true, {}, this.defaults, options);    
+    let self = this;
+    $(options.elementID)
+      .unbind()
+      .click(function(e) {
+          handleAction(e.target);
+       });
+    
+  };
+  
+  
+  /*
+   * dividing events on concrete DOM type elements
+   */
+  let handleAction = function ( element ) {
+    let typeButton = /button/i;
+    if (typeButton.test(element.tagName))
+      console.log(element);
+    /*if($(this).hasClass('new') === true)
+      self.addEntity($(this));
+  
+     if($(this).hasClass('decrLevel') === true)
+    decreaseLevel($(this));*/
+  };
+  
+  /*
+   * creating new row with all separate fields, buttons and ordial level number
+   */
+  let addEntry = function ( btn ) {
+    
+    let settings = $(btn).data('plugin_' + pluginName).settings;
+    let current_row = $(btn).closest('tr');
+    
+    //generating new level ID accroding to current tabel row
+    levNewID = incOrdinalNumber(settings.findLevel($(current_row).attr(idAttr)));
+  
+    let btns =  $(entityTemplate(settings))
+      .attr(idAttr,levNewID)
+      .insertAfter(current_row)
+      .find('button');    
+    
+    $(btns).each( function() {
+      
+      if ( !$.data(this, "plugin_" + pluginName )) {
+        $.data(this, "plugin_" + pluginName,
+        new Plugin(this, settings ));
+      }
+      
+    });
+       
+     let rowNew = $('#'+levNewID);
+
+     stateEdit(rowNew,settings);
+        
+    let nextRow=$(rowNew).next();
+          
+    while($(nextRow).index()>0) {
+       $(nextRow).attr(idAttr,incOrdinalNumber(settings.findLevel($(nextRow).attr(idAttr))));
+       nextRow = $(nextRow).next();
+     }
+
+  }
+  
+  return {
+    init: init
+  }
+  
+})();  
+
+
+let managerStructure = {
 	
-	let pluginName = "multilevelStructure";
+	pluginName: "multilevelStructure",
 	
-	let  defaults = {
+	defaults:  {
 	        actionEl: "button",
 	        activeClass: "active",
 	        prefixID: "lev_",
@@ -35,23 +142,23 @@
              type: "checkbox"
            },
 	        } 
-		};
+		},
 
 	
     /* necessary html tags for working plugin properly */
-    const structure = {
+    structure: {
       containerTable: "tbody",
       containerEntry: "tr",
       fieldEl: "input",
-    };
+    },
     
-    const readOnlyAttr="readonly";
-    const actions = ["create", "modify", 
+    readOnlyAttr: "readonly",
+    actions: ["create", "modify", 
       "discard", "save", 
       "moveUp", "moveDown", 
-      "encreaseLevel", 'decreaseLevel'];
+      "encreaseLevel", 'decreaseLevel'],
     
-    const btnsList = { 
+    btnsList: { 
       create:  'Create new entity',
       modify:  'Edit entity',
       save: 'Save entity',
@@ -60,90 +167,18 @@
       move_down: 'Move entity down',
       increase_level: 'Increase level of entity',
       decrease_level: 'Increase level of entity'
-    };
+    },
 
-    const levelSep = "_";
-    const dot = ".";
-    const idAttr =  "id";   
-    const listFields = ["level","title","period","period_scale","cost","startFrom","endBy"];
-    
-    
-	
-	function Plugin( element, options ) {
-		
-		this.element = element;
-		this.settings = $.extend( true, {}, defaults, options);
-		this._defauls = defaults;
-		this._name = pluginName;
-    this.init();
-    
-    
-	}	
-	
-	
-	/*
-	 * initializing action for each button of the table row
-	 */
-	Plugin.prototype.init = function ()
-	{
-		let self = this;	   
-		$(this.element).click(function() {
-	  
-	    if($(this).hasClass('new') === true)
-	      self.addDeliverable($(this));
-	  
-	     if($(this).hasClass('decrLevel') === true)
-	    decreaseLevel($(this));
-		});
-		
-	}
-	
-	
-    /*
-     * creating new row with all separate fields, buttons and ordial level number
-     */
-	  Plugin.prototype.addDeliverable = function(btn)
-    {
-	    
-	    let settings = $(btn).data('plugin_' + pluginName).settings;
-		  let current_row=$(btn).closest('tr');
-		  
-		  //generating new level ID accroding to current tabel row
-		  levNewID = incOrdinalNumber($(current_row).attr(idAttr));
-		
-		  let btns =  $(entityTemplate(settings))
-		    .attr(idAttr,levNewID)
-		    .insertAfter(current_row)
-		    .find('button');	  
-		  
-		  $(btns).each(function(){
-		    
-		    if ( !$.data(this, "plugin_" + pluginName )) {
-	        $.data(this, "plugin_" + pluginName,
-	        new Plugin(this, settings ));
-		    }
-		  });
-			   
-		   let rowNew = $('#'+levNewID);
+    levelSep: "_",
+    dot: ".",
+    idAttr: "id",
+    listFields: ["level","title","period","period_scale","cost","startFrom","endBy"],
 
-          stateEdit(rowNew,settings);
-          
-          let nextRow=$(rowNew).next();
-          
-         
-          while($(nextRow).index()>0)
-          {
-            $(nextRow).attr(idAttr,incOrdinalNumber($(nextRow).attr(idAttr)));
-            nextRow = $(nextRow).next();
-          }
-
-    }
-	
 	
 	/*
 	 * Template for separate table row
 	 */
-	const entityTemplate = function(settings) {
+	entityTemplate:function(settings) {
 	  
 	  let entity = document.createElement('tr');
 	  let entityDelete = null;
@@ -185,19 +220,18 @@
 	  
 	  return entity;
     
-	};
+	},
 	
 	
 	/*
 	 * draw button html and its necessary attributes
 	 */
-	const addBtn = function(el, action, title) {
+	addBtn: function(el, action, title) {
 	  
     let btn = document.createElement(el);
     btn.className = action;
     
-    if (el === 'button')
-    {
+    if (el === 'button') {
       btn.setAttribute('name', action);
       btn.setAttribute('value', action);
       btn.setAttribute('title', title);
@@ -206,96 +240,93 @@
     btn.innnerHTML = '<span class="invisible">' + title + '</span>';
     
     return btn;
-	}
+	},
 	
 	
 	/*
 	 * insert the input field into the entity of the multilevel table
 	 */
-  const addField = function() {
+  addField: function() {
     
     let inp = document.createElement('input');
     inp.setAttribute('type','text');
     inp.setAttribute('readonly','readonly');
     
     //set title and aria-label from customized settings
-    if(this.settings.actionForm)
+    if (this.settings.actionForm) {
       inp.setAttribute('form',this.settings.actionForm);
-    
+    }
+      
     //aditional class for users can be inserted
     inp.className = element;
-  }
+  },
 	
   
 	  /*
      * Changing level of the entry to make as a subdirectory of the parent entry
      */
-    const decreaseLevel = function(e) {
+    decreaseLevel: function(e) {
        
-       let actionBtn = e || this;
+      let lastChildLevel = null, prevRowLevel = null;
+      let actionBtn = e || this;
+      let previousNumber;
          
-       let currentRow = $(actionBtn).closest('tr');
-
-       let currentId = $(actionBtn).closest('tr').attr(idAttr);
-       let currentLevel = getLevel(currentId);
-       let currentOrder = findOrderNumber(currentId);
+      let currentRow = $(actionBtn).closest('tr');
+      let currentId = $(actionBtn).closest('tr').attr(idAttr);       
        
-       let lastChildLevel = null, prevRowLevel = null;
-       
-       let previousNumber = currentOrder-1;
-       if(previousNumber === 0)
-         return;    
-       
-       
-       //must be tested with the level more than first
-       let similarLevel = new RegExp('^' + levelPrexif + previousNumber + '$');
+      let allLevels = this.findLevel(currentId);
+      depthLevel = allLevels.lentgh;
+      
+      //get the 
+      if (depthLevel >1 ) previousNumber;    
+      previousNumber = allLevels;
+   
+      //must be tested with the level more than first
+      let similarLevel = new RegExp('^' + levelPrexif + previousNumber + '$');
        
        let rowSearch = $(actionBtn).closest('tbody').find('tr').toArray();
 
-         
        let i=0;
        
-       while (prevRowLevel === null  &&  i < rowSearch.length+1)
-       {
+       while (prevRowLevel === null  &&  i < rowSearch.length+1) {
          
-         if (similarLevel.test($(rowSearch[i]).attr(idAttr))) 
-             prevRowLevel = $(rowSearch[i]).attr(idAttr);
+         if (similarLevel.test($(rowSearch[i]).attr(idAttr))) {
+           prevRowLevel = $(rowSearch[i]).attr(idAttr);
+         }
+             
          i++;
        }  
        
-       if(prevRowLevel)
-         lastChildLevel = hasSubDeliv(prevRowLevel);       
+       if (prevRowLevel) lastChildLevel = hasSubDeliv(prevRowLevel);       
        
        //let newLevelId = 0;
-       if(lastChildLevel)
-       {
+       if(lastChildLevel) {
          lastChildLevel++;
          $(currentRow).attr(idAttr,levelPrexif + previousNumber + levelSep + lastChildLevel);
-       }
-       else
-       {          
+       } else {          
          $(currentRow).attr(idAttr, levelPrexif + previousNumber + levelSep + 1);
          //let subLevel 
          //if(!subLevel)
          //  return;
        }
          
+       let nextRow = $(currentRow).next() || null;
        
-       let nextRow=$(currentRow).next();
-       
-       while($(nextRow).index()>0)
-       {
-         $(nextRow).attr(idAttr,decreaseOrderNumber($(nextRow).attr(idAttr)));
-         nextRow = $(nextRow).next();
+       while(nextRow) {
+         
+         $(nextRow)
+           .attr(idAttr,decOrdinalNumber(findLevel($(nextRow).attr(idAttr))));
+         
+         nextRow = $(nextRow).next() || null;
        }
 
-     }
+     },
 	  
      
      /*
       * edit button action to make any field edible
       */
-     const stateEdit = function(current_row,settings)
+     stateEdit: function(current_row,settings)
      {
        //set current row active
        $(current_row).parent().children().removeClass(settings.activeRow);
@@ -309,177 +340,92 @@
        $(current_row).find(structure.fieldEl).first().focus();
        //another button for saving the value must be changed to active state
      
-     };
+     },
      
      
      //current row is saved with ajax request
-     const stateSave = function(current_row)
+     stateSave: function(current_row)
      {
-       $.each(settings.fields, function( index, value )
-       {
+       $.each(settings.fields, function( index, value ) {
          $(current_row).find(constant.valSelector + "." + value).val();
        });
        //sending ajax request to update this row with needed values
+     },
+           
+       
+   /*
+   * Get the number of the parent level
+   */
+   hasSubDeliv: function(currentId) {
+          
+     let similarLevel = new RegExp('^' + currentId + levelSep + "\\d$");
+     let lastChildLevel = null;     
+          
+     lastChildLevel =  $('#'+currentId)
+       .closest('tbody')
+       .find('tr')
+       .filter(function(index,element) {
+         if (similarLevel.test($(this).attr(idAttr))) return 1;
+        }).length;
+          
+     return lastChildLevel;
+   },
+        
+        
+  /*
+  * Find order number
+  */
+  findLevel: function(currentId) {
+         
+    let parsedLevel = 0, 
+      pureID,
+      numbers = [];
+              
+    if (this.settings.prefix) {
+      let prefix = currentId.lastIndexOf(settings.prefix);
+      if (prefix !== false) {
+        pureID = currentId.slice(prefix+1);
+        numbers = currentId.split(levelSep);
+       }
      }
-           
-      
-      /*
-       * Get the number of the parent level
-       */
-       const getLevel = function(currentId)
-       {
-         let numberLevel = currentId.slice(levelPrexif.length);
-         
-         let level = 0;
-         if(numberLevel.indexOf(levelSep) > -1)
-           level = numberLevel.split(levelSep);    
-         
-         
-         return level+1;
-       }
+            
+     return numbers;
+   },
+   
+  
+  /*
+  * Increase order number of the same level
+  */
+  incOrdinalNumber: function(numbersLevel) {
+       
+    numbersLevel[numbersLevel.length]--;
+       
+    return numbersLevel.join(levelSep);
+    
+  },
        
        
-       /*
-        * Get the number of the parent level
-        */
-        const hasSubDeliv = function(currentId)
-        {
-          let similarLevel = new RegExp('^' + currentId + levelSep + "\\d$");
-          let lastChildLevel = null;     
-          
-          lastChildLevel =  $('#'+currentId).closest('tbody').find('tr').filter(function(index,element)
-          { 
-             if(similarLevel.test($(this).attr(idAttr))) 
-                 return 1;
-          }).length;
-          
-          return lastChildLevel;
-        }
-        
-        
-        /*
-         * Find order number
-         */
-       const findOrderNumber = function(currentId)
-        {
-          let parsedLevel = 0, 
-          findLast = currentId.lastIndexOf(levelSep);
-
-          //to check all number for separator symbols must be determined to exclude them from digitals
-          if(findLast>-1)
-             return parseInt(currentId.slice(findLast + 1));
-          return false;
-        }
-        
-       /*
-        * Increase order number of the same level
-        */
-       const incOrdinalNumber = function(currentId)
-       {
-         let parsedLevel = 0, 
-         findLast = currentId.lastIndexOf(levelSep);
-
-         //to check all number for separator symbols must be determined to exclude them from digitals
-         if(findLast>-1)
-         {
-            //to add new number the last digit must be interger
-            //make choice if no prefix before lebel ID
-           
-            parsedLevel = parseInt(currentId.slice(findLast + 1));
-            
-            //check how function parseInt works
-            if (!isNaN(parsedLevel)) {
-              parsedLevel++;
-             return currentId.slice(0, findLast+1) + parsedLevel;
-          }
-            
-         }
+  /*
+  * Increase order number of the same level
+  */
+  decOrdinalNumber: function(numbersLevel) {
+    
+    numbersLevel[numbersLevel.length]--;
          
-         return false;
-       }
-       
-       
-       /*
-        * Increase order number of the same level
-        */
-       const decOrdialNumber = function(currentId)
-       {
-         let parsedLevel = 0, 
-         findLast = currentId.lastIndexOf(levelSep);
-
-         //to check all number for separator symbols must be determined to exclude them from digitals
-         if(findLast>-1)
-         {
-            //to add new number the last digit must be interger
-            //make choice if no prefix before lebel ID
-            parsedLevel = parseInt(currentId.slice(findLast + 1));
-            
-            //check how function parseInt works
-            if (isNaN(parsedLevel))
-              return false;
-            
-            parsedLevel--;
-            if(parsedLevel>0)
-             return currentId.slice(0, findLast+1) + parsedLevel;
-         }
-         
-         return false;
-       }        
-      
-      
-      /*
-      * Get the level of the current row
-      */
-      const findLevel = function(currentId)
-      {
-        var i=0, levelSep=findNumberLevel(currentId);
-        
-        while(levelSep>0)
-        {
-          i++;
-          currentId = currentId.slice(0,levelSep);
-          levelSep = findNumberLevel(currentId);
-        }
-        
-        return i;
-      }
-      
-      /*
-       * Generate the next level relating to the current level
-       */
-       const generateLevel = function(currentId)
-       {
-         var newOrder, newId; 
-         //the last number of the new row must be increased to 1
-          
-         var lastLevel = findNumberLevel(currentId);
-         
-         //to check all number for separator symbols must be determined to exclude them from digitals
-         if(lastLevel > 0)
-         {
-           //to add new number the last digit must be interger
-           newOrder = lastLevel + 1;
-           return currentId.slice(0, lastLevel + 1) + newOrder;
-         }
-         else
-           return 0;
-       } 
-     
+    return numbersLevel.join(levelSep);
+    
+  }    
 	
 	
 	 // A really lightweight plugin wrapper around the constructor,
     // preventing against multiple instantiations
-    $.fn[pluginName] = function ( options ) {
+   /* $.fn[pluginName] = function ( options ) {
         return this.each(function () {
             if ( !$.data(this, "plugin_" + pluginName )) {
                 $.data( this, "plugin_" + pluginName,
                 new Plugin( this, options ));
             }
         });
-    }
+    }*/
                
-       
-    
-      
-
-})(jQuery,window, document);
+};

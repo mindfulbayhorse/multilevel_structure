@@ -3,6 +3,6 @@ th.actions button{
   width: 28px;
 }
 
-th.actions button.new_but{
+th.actions button.new{
 	background-image: url('../img/new.png');
 }

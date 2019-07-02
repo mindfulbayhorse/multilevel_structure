@@ -4,6 +4,7 @@
 	<meta http-equiv="content-type" content="text/html" />
 	<meta name="author" content="Olga Zhilkova" />
     <link href="css\new_boot.css" rel="stylesheet" type="text/css" />
+    <link href="css\responsive_table.css" rel="stylesheet" type="text/css" />
     <script src="js\jquery-3.2.1.min.js"></script>
     <script src="js\multilevel_structure.js"></script>
 	<title>Origin html structure for visual</title>
@@ -33,7 +34,7 @@
                   		<tbody id="structure_1">
                     		<tr id="lev_1">
                 				  <th class="actions">
-                            <button class="new" name="create" type="button" form="delivery"><img src="img/new.png" title="Create" width="27" height="27" /></button>
+                            <button class="new" name="create" type="button" form="delivery"></button>
                             <button class="edit"  type="button" name="eidt" form="delivery"><img src="img/Edit_start.png" title="Edit" width="27" height="27" /></button>
       										  <button class="move_up" name="save" type="button" form="delivery"><img src="img/edit_end.png" title="Save" width="27" height="27" /></button>
                             <button class="level_down" name="descend" type="button" form="delivery"><img src="img/level_down.png" title="Lower" width="27" height="27" /></button>
@@ -150,7 +151,9 @@
     </div>
 <script>
 $(document).ready(function(){
-  $('#WBS .actions button').multilevelStructure();
+  
+  managerEntries.init({'elementID': '#WBS'});
+
   //var carousel = new myPrimeBanner().init({selector: ".carousel"});
 });
 </script>
