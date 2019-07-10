@@ -22,7 +22,20 @@ styles for specific additional elements
 	clear: both;	
 }
 
+.one_row{
+	display: -ms-Flexbox;
+  -ms-box-orient: horizontal;
 
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: flex;
+
+  -webkit-flex-flow: row wrap;
+  -moz-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
 
 
 /*
@@ -56,7 +69,7 @@ table tr{
 }
 
 table thead th{
-	background: #6c8f95;
+	background: #dbccc1;
 }
 
 table tbody th{
@@ -65,15 +78,14 @@ table tbody th{
 
 table tr:nth-child(even)
 {
-	background: #dbccc1;
+	background: #ece4df;
 }
 
 
 table tr:nth-child(odd) 
 {
-	background: #e6ae87;	
+	background: #ece4df;
 }
-
 
 
 /* form fields */
@@ -88,76 +100,8 @@ textarea{
 	width: 100%;
 }
 
-
-
-/* styles for dialog modal window*/
-.dialog_wrapper{
-	background: rgba(192,192,192,0.3);
-	position: absolute; 
-	width: 100%; 
-	height: 100%;  
-	top: 0px; 
-	left: 0px;  
-	z-index: 999999;
-}
-
-
-.dialog{
-	border-width: 4px;
-	border-color: #61729A;
-	background-color: #E8EAFA;
-	border-style: solid;
-	min-width: 300px;
-	min-height: 200px;
-	border-top-left-radius: 5px 7px;
-	border-top-right-radius: 5px 7px;
-	border-bottom-left-radius: 5px 7px;
-	border-bottom-right-radius: 5px 7px;
-	box-shadow: 5px 5px 2px 2px rgba(87,93,165,0.3),
-            2px 2px 2px 2px rgba(87,93,165,0.3);
-}
-
-
-.dialog input{
-	background-color: #fff;
-	border: 1px solid #000;
-	font-size: 12px;
-	padding: 0px;
-	line-height: 14px;
-	max-width: 30%;
-	color: #000;
-	clear: both;
-	margin: 5px;
-}
-
-.dialog input[type='submit'], .dialog button {
-	cursor: pointer;
-}
-
-
-
-
-/*
-styles for the structure of the WBS
-*/
-table#wbs input{
-  border: 0px solid #fff;
-  background: transparent;
-  padding: 0px;
-  margin: 0px;
-  box-shadow: none;
-  height: auto;
-  line-height: 100%;
-  color: #000000;
-}
-
-
 table td, table th{
 	padding: 0px;
-}
-
-table tr.sublevel td{
-
 }
 
 
@@ -228,37 +172,9 @@ table td.title input{
 	text-align: left;	
 }
 
-.actions button{
-	width: 32px;
-	height: 32px;
-	border-radius: 4px 4px;
-	outline: none;
-	border-width: 1px;
-	border-color: #6d3d1c;
-	cursor: pointer;
-	display: block;
-	float: left;
-	margin: 0px 1px;
-	padding: 0px;	
-	background-position: left top;
-  background-repeat:  no-repeat;
-  border-color: rgb(134,158,169);
-	border-width: 1px;
-	border-style: outset;	
-  box-shadow: 1px 1px 1px 2px rgba(232,234,250,0.4) inset;
+.thoughtful{
+	text-align: center;
 }
 
-
-.actions button:hover{
-}
-
-
-.actions button.move_up:hover{
-	box-shadow: 1px 1px 1px 2px rgba(232,234,250,0.4) inset;
-}
-
-.actions button.level_down{
-  background-image: url('../img/level_down.jpg');
-}
 
 

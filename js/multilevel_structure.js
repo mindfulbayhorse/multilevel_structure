@@ -12,7 +12,8 @@ let  Entry = function ( ID, fields ) {
     
 };
   
-let  entryFactory = (function () {
+let  EntryFactory = (function () {
+  
     let entriesPool = {}, existingEntry;
     
     return {
@@ -153,10 +154,16 @@ let managerStructure = {
     },
     
     readOnlyAttr: "readonly",
-    actions: ["create", "modify", 
-      "discard", "save", 
-      "moveUp", "moveDown", 
-      "encreaseLevel", 'decreaseLevel'],
+    actions: [
+      "create", 
+      "modify", 
+      "discard", 
+      "save", 
+      "moveUp", 
+      "moveDown", 
+      "encreaseLevel", 
+      'decreaseLevel',
+      'breakdown'],
     
     btnsList: { 
       create:  'Create new entity',

@@ -5,16 +5,14 @@
 	<meta name="author" content="Olga Zhilkova" />
     <link href="css\new_boot.css" rel="stylesheet" type="text/css" />
     <link href="css\responsive_table.css" rel="stylesheet" type="text/css" />
+    <link href="css\style.css" rel="stylesheet" type="text/css" />
     <script src="js\jquery-3.2.1.min.js"></script>
+    <script src="js\handlebars-v4.0.14.js"></script>
     <script src="js\multilevel_structure.js"></script>
 	<title>Origin html structure for visual</title>
 </head>
 <body>
-  	<div class="container-fluid">
-    	<div class="row">
-        	<div class="col-2">Left side bar</div>
-        	<div class="col-8">
-              	<div>
+  	<div class="thoughtful">
                 	<table id="WBS">
                   		<caption>
                          The table shows all deliverables for project in the tree
@@ -25,138 +23,78 @@
 	                		    <th>Level</th>
 	                		    <th>Title</th>
 	                		    <th>Duration</th>
-	                        	<th>Time scale</th>
 	                		    <th>Cost (AU)</th>
-	                        	<th>Thousands (K)</th>
-	                		    <th></th>
 	                		</tr>
                   		</thead>
-                  		<tbody id="structure_1">
-                    		<tr id="lev_1">
-                				  <th class="actions">
-                            <button class="new" name="create" type="button" form="delivery"></button>
-                            <button class="edit"  type="button" name="eidt" form="delivery"><img src="img/Edit_start.png" title="Edit" width="27" height="27" /></button>
-      										  <button class="move_up" name="save" type="button" form="delivery"><img src="img/edit_end.png" title="Save" width="27" height="27" /></button>
-                            <button class="level_down" name="descend" type="button" form="delivery"><img src="img/level_down.png" title="Lower" width="27" height="27" /></button>
-                    				<button class="level_up" name="ascend" type="button" form="delivery"><img src="img/level_up.png" width="27" title="Ascend" height="27" /></button>
-											      <button class="move_down" name="lower" type="button" form="delivery"><img src="img/move_down.png" width="27" title="Lower" height="27" />
-											      <button class="move_up" name="lift" type="button" form="delivery"><img src="img/move_up.png" width="27" height="27" /></button>
-                     				<button class="tree_but btn btn-secondary" type="button" form="delivery"><img src="img/tree_open.png" width="27" height="27" /></button>	
-                			  </th>
-                			<td class="level">1</td>
-                			<td class="title">
-                          <input type="text" class="title form-control" readonly="readonly" form="deliverable" title="Title" aria-label="Title"/>
-                      </td>
-                			<td class="time">
-                        <input type="text" value="" readonly="readonly" class="period form-control" form="deliverable" readonly="readonly" />     
-                      </td>
-                      <td class="scale_time">
-                        <select class="form-control">
-                          <option>hours</option>
-                          <option>days</option>
-                          <option>weeks</option>
-                          <option>months</option>
-                        </select>
-                      </td>
-                			<td class="cost">
-                          <input class="span2 cost form-control" type="text" readonly="readonly" value="0">
-                      </td>
-                      <td class="thousand">
-                        <input type="checkbox" name="thousand_1" class="thousand form-check-input" readonly="readonly"/>
-                      </td>
-                			<th class="actions">
-                    				<button class="move_down btn btn-outline-secondary btn-sm" type="button" form="delivery">
-                            <img src="img/delete.png" width="27" height="27" /></button>	
-                      </th>
-                		</tr>
-                    <tr id="lev_2">
-                			<th class="actions">
-                            <button class="new" name="create" type="button" form="delivery"><img src="img/new.png" title="Create" width="27" height="27" /></button>
-                            <button class="edit"  type="button" name="eidt" form="delivery"><img src="img/Edit_start.png" title="Edit" width="27" height="27" /></button>
-                            <button class="move_up" name="save" type="button" form="delivery"><img src="img/edit_end.png" title="Save" width="27" height="27" /></button>
-                            <button class="level_down" name="descend" type="button" form="delivery"><img src="img/level_down.png" title="Lower" width="27" height="27" /></button>
-                            <button class="level_up" name="ascend" type="button" form="delivery"><img src="img/level_up.png" width="27" title="Ascend" height="27" /></button>
-                            <button class="move_down" name="lower" type="button" form="delivery"><img src="img/move_down.png" width="27" title="Lower" height="27" />
-                            <button class="move_up" name="lift" type="button" form="delivery"><img src="img/move_up.png" width="27" height="27" /></button>
-                            <button class="tree_but btn btn-secondary" type="button" form="delivery"><img src="img/tree_open.png" width="27" height="27" /></button>  
-                			</th>
-                			<td class="level">2</td>
-                			<td class="title">
-                        <input type="text" class="title form-control" value="Content" readonly="readonly" form="deliverable" title="Title" aria-label="Title"/>
-                      </td>
-                			<td class="time">
-                        <input type="text" value="" readonly="readonly" class="period form-control" form="deliverable" readonly="readonly" />     
-                      </td>
-                      <td>
-                        <select class="form-control">
-                          <option>hours</option>
-                          <option>days</option>
-                          <option>weeks</option>
-                          <option>months</option>
-                        </select>
-                      </td>
-                			<td class="cost">
-                          <input class="span2 cost form-control" type="text" readonly="readonly" value="14">
-                      </td>
-                       <td>
-                        <input type="checkbox" name="thousand_1" class="thousand form-check-input" readonly="readonly" />
-                      </td>
-                			<th class="actions">
-                    				<button class="move_down btn btn-outline-secondary btn-sm" type="button" form="delivery">
-                            <img src="img/delete.png" width="27" height="27" /></button>
-                      </th>
-                		</tr>
-                    <tr id="lev_3">
-                			<th class="actions">
-                            <button class="new" name="create" type="button" form="delivery"><img src="img/new.png" title="Create" width="27" height="27" /></button>
-                            <button class="edit"  type="button" name="eidt" form="delivery"><img src="img/Edit_start.png" title="Edit" width="27" height="27" /></button>
-                            <button class="move_up" name="save" type="button" form="delivery"><img src="img/edit_end.png" title="Save" width="27" height="27" /></button>
-                            <button class="level_down" name="descend" type="button" form="delivery"><img src="img/level_down.png" title="Lower" width="27" height="27" /></button>
-                            <button class="level_up" name="ascend" type="button" form="delivery"><img src="img/level_up.png" width="27" title="Ascend" height="27" /></button>
-                            <button class="move_down" name="lower" type="button" form="delivery"><img src="img/move_down.png" width="27" title="Lower" height="27" />
-                            <button class="move_up" name="lift" type="button" form="delivery"><img src="img/move_up.png" width="27" height="27" /></button>
-                            <button class="tree_but btn btn-secondary" type="button" form="delivery"><img src="img/tree_open.png" width="27" height="27" /></button>  		
-                			</th>
-                			<td class="level">3</td>
-                			<td>
-                        <input type="text" value="Design" class="title form-control" readonly="readonly" form="deliverable" title="Title" aria-label="Title"/>
-                      </td>
-                			<td class="time">
-                        <input type="text" value="67" readonly="readonly" class="period form-control" form="deliverable" readonly="readonly" />     
-                      </td>
-                      <td>
-                        <select class="form-control">
-                          <option>hours</option>
-                          <option>days</option>
-                          <option>weeks</option>
-                          <option>months</option>
-                        </select>
-                      </td>
-                			<td class="cost">
-                          <input class="span2 cost form-control" type="text" readonly="readonly" value="24">
-                      </td>
-                       <td>
-                         <input type="checkbox" name="thousand_1" class="thousand form-check-input" readonly="readonly" />
-                      </td>
-                			<th class="actions">
-                    				<button class="move_down btn btn-outline-secondary btn-sm" type="button" form="delivery">
-                            <img src="img/delete.png" width="27" height="27" /></button>
-                      </th>
-                		</tr>
+                  <tbody>
                   </tbody>
                 </table>
-              </div>
-        </div>
-        <div class="col-2">Right side bar</div>
     </div>
+<script id="deliverable-template" type="text/x-handlebars-template">
+      <tr>
+        <th class="actions">
+          <ul>
+            {{#each actions}}
+              <li>{{action_button}}
+            {{/each}}
+        </th>
+
+        <td class="level" data-id="1"></td>
+        <td class="title"></td>
+        <td class="time"></td>
+        <td class="cost"></td>
+      </tr>
+
+</script>
 <script>
 $(document).ready(function(){
   
-  managerEntries.init({'elementID': '#WBS'});
+  let context = {
+      actions: [
+        {type: "create", style: "new"}, 
+        {type: "modify", style: "edit"}, 
+        {type: "discard", style: "delete"}, 
+        {type: "save", style: "save"}, 
+        {type: "moveUp", style: "move_up"}, 
+        {type: "moveDown", style: "move_down"}, 
+        {type: "encreaseLevel", style: "level_up"}, 
+        {type: 'decreaseLevel', style: "level_down"},
+        {type: 'breakdown', style: "tree_open"}
+       ],
+       fields: ["title","period","cost"],
+       deliverables: {
+         0: {
+           levelID: '1',
+           fields: {
+             
+           }
+         }
+       } 
+    };
+
+    Handlebars.registerHelper('action_button', function() {
+      
+      //return  <button class="{{style}}" name="create" {{#if restricted}}readonly="readonly"{{/if}} type="button" form="delivery"></button> 
+      let type = Handlebars.escapeExpression(this.type),
+        style = Handlebars.escapeExpression(this.style);
+      
+      return new Handlebars.SafeString(
+        "<button class='" + style + "' name='" + type + "'><span>" + type + "</span></button>"
+      );
+      
+    });
+    
+    //<input type="text" {{#if saved}}readonly="readonly"{{/if}} readonly="readonly" value="{{cost}}">
+    
+  var source   = document.getElementById("deliverable-template").innerHTML;
+  var template = Handlebars.compile(source);
+  $('#WBS tbody').html(template(context));
+  //managerEntries.init({'elementID': '#WBS'});
 
   //var carousel = new myPrimeBanner().init({selector: ".carousel"});
 });
 </script>
+
 <form id="deliverable" name="deliverable" method="GET" action="">
     <input type="hidden" value="" name="id" />
 </form>

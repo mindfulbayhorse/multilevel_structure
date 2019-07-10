@@ -1,12 +1,21 @@
 /*
-* Olga
+* Olga Zhilkova
 * Special styles for WBS buttons
 */
+#WBS {
+	max-width: 70%;
+	margin: 10% auto;
+}
 
 #WBS .actions button{
   padding: 0px;
   border: none;
   cursor: pointer;
+}
+
+
+#WBS .actions ul li{
+	list-style-type: none;
 }
 
 #WBS button, #WBS input,
@@ -49,4 +58,16 @@
 
 #WBS td.thousand{
   width: 5%;
+}
+
+
+table#wbs input{
+  border: 0px solid #fff;
+  background: transparent;
+  padding: 0px;
+  margin: 0px;
+  box-shadow: none;
+  height: auto;
+  line-height: 100%;
+  color: #000000;
 }
