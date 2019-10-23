@@ -1,438 +1,238 @@
 /* 
- * Table buttons 
- * Description: Plugin for table actions for each row with different levels
+ * Breakdown list
+ * Description: Making work breakdown structure for deliverables or any list
  * Author: Olga Zhilkova
  * Version: 1.0 
  */
-let  Entry = function ( ID, fields ) {
-    
+;
+(function($, window, document, undefined) {
+
+  'use strict';
+
+  /*
+   * Single deliverable
+   */
+  let Entry = function(ID, title) {
+
     this.ID = ID;
-    //if (fields['level'])
-    this.fields = fields;
-    
-};
-  
-let  EntryFactory = (function () {
-  
-    let entriesPool = {}, existingEntry;
-    
+    this.title = ID;
+
+    return this;
+
+  };
+
+  /*
+   * Storage of all records of deliverables
+   */
+  let EntryFactory = (function() {
+
+    let records = {};
+    let current = 0;
+
     return {
-      createEntry: function ( entryID, fields ) {
-   
-        existingEntry = existingEntry[ entryID ];
-        if ( !!existingEntry ) {
-          return existingEntry;
+
+      // add new deliverable to collection
+      createEntry : function(entryID, title) {
+
+        let recordExists = records[entryID];
+        if (!!recordExists) {
+
+          return recordExists;
+
         } else {
-   
-          let entry = new Entry( entryID, fields );
-          entriesPool[entryID] = book;
+
+          let entry = new Entry(entryID, title);
+          records[entryID] = entry;
           return entry;
-   
+
+        }
+      },
+
+      // return all entries
+      getList : function() {
+        return records;
+      },
+
+      // get record by its ID
+      getEntry : function(entryID) {
+        return records[entryID];
+      }
+
+    }
+
+  })();
+
+  /*
+   * Methods to update template with event handlings for user interface
+   */
+  let interfaceProvider = function(contextRules) {
+
+    this.cotext = contextRules;
+
+    // get all nodes that have a content binding
+    this.getNodes = function(tempID) {
+
+      let node = document.getElementById(tempID);
+
+      if (node.length === 0)
+        return false;
+
+      return node.el.querySelectorAll("[data-template]");
+
+    };
+
+    // return the bindings given a node and the bindingContext
+    this.getBindings = function(node) {
+
+      // determine if an element has any binding
+      let classes = node.getAttribute("data-template");
+
+      if (!!classes) {
+
+        classes = classes.split(' ');
+        // evaluate each class, build a single object to return
+        for (var i = 0, j = classes.length; i < j; i++) {
+
+          let bindingAccessor = _self.cotext[classes[i]];
+          if (!!bindingAccessor) {
+
+            if (typeof bindingAccessor === "function") {
+
+              // subscribe concrete nodes through view
+              bindingAccessor.call(cotext.data);
+
+            } else {
+              // show formatted content through view
+            }
+
+          }
         }
       }
-  }
-    
-})();
 
-let managerEntries = (function () {
-  let entryProcesses = {};  
-  
+    };
+
+    // public methods to use
+    return {
+      getTemplate : getTemplate,
+      bindingObject : _self.bindingObject,
+      getBindings : getBindings,
+      nodes : _self.nodes
+    }
+
+  }
+
   /*
-   * initializing action for whole table onsisting of the data
+   * Manage necessary actions
    */
-  let init = function ( options ) {
-    
-    this.settings = $.extend( true, {}, this.defaults, options);    
-    let self = this;
-    $(options.elementID)
-      .unbind()
-      .click(function(e) {
-          handleAction(e.target);
-       });
-    
-  };
-  
-  
-  /*
-   * dividing events on concrete DOM type elements
-   */
-  let handleAction = function ( element ) {
-    let typeButton = /button/i;
-    if (typeButton.test(element.tagName))
-      console.log(element);
-    /*if($(this).hasClass('new') === true)
-      self.addEntity($(this));
-  
-     if($(this).hasClass('decrLevel') === true)
-    decreaseLevel($(this));*/
-  };
-  
-  /*
-   * creating new row with all separate fields, buttons and ordial level number
-   */
-  let addEntry = function ( btn ) {
-    
-    let settings = $(btn).data('plugin_' + pluginName).settings;
-    let current_row = $(btn).closest('tr');
-    
-    //generating new level ID accroding to current tabel row
-    levNewID = incOrdinalNumber(settings.findLevel($(current_row).attr(idAttr)));
-  
-    let btns =  $(entityTemplate(settings))
-      .attr(idAttr,levNewID)
-      .insertAfter(current_row)
-      .find('button');    
-    
-    $(btns).each( function() {
-      
-      if ( !$.data(this, "plugin_" + pluginName )) {
-        $.data(this, "plugin_" + pluginName,
-        new Plugin(this, settings ));
+  let managerStructure = function(options) {
+
+    // keep only entry IDs
+    this.inActionsEntries = {};
+    this.options = options;
+    let _self = this;
+
+    // add new entry and record the current its state
+    let addDeliverable = function(id, title) {
+
+      let entry = EntryFactory.create(id, title);
+
+      inActionsEntries[entry.ID] = {
+        state : 'new',
+        done : false,
+        filled : false
       }
-      
-    });
-       
-     let rowNew = $('#'+levNewID);
 
-     stateEdit(rowNew,settings);
-        
-    let nextRow=$(rowNew).next();
-          
-    while($(nextRow).index()>0) {
-       $(nextRow).attr(idAttr,incOrdinalNumber(settings.findLevel($(nextRow).attr(idAttr))));
-       nextRow = $(nextRow).next();
-     }
+    };
 
-  }
-  
-  return {
-    init: init
-  }
-  
-})();  
+    // fill template with the data and interface events
+    let applyEvents = function(sheet) {
 
+      // apply every event to each node in the template
+      let nodeID = _self.id || '';
 
-let managerStructure = {
-	
-	pluginName: "multilevelStructure",
-	
-	defaults:  {
-	        actionEl: "button",
-	        activeClass: "active",
-	        prefixID: "lev_",
-	        //make a protection from adding and deleting necessary object property
-	        //incorporate the publish and subscriber methods separately from this module by the
-	        //event listeners and backward function with another publisher and subscribers updating page functionality
-	        fields: ["title","period","cost"],
-	        fldsSett: {
-	         title: {
-	           type: "input"
-	         },
-	         period: {
-             type: "input"
-           },
-           period_scale: {
-             type: "select",
-             list:   ['hours', 'days', 'weeks', 'months']
-           },
-           cost: {
-             type: "input",
-             format: 'dd.dd $'
-           },
-           done: {
-             type: "checkbox"
-           },
-	        } 
-		},
+      let contentNodes = sheet.getNodes(nodeID);
 
-	
-    /* necessary html tags for working plugin properly */
-    structure: {
-      containerTable: "tbody",
-      containerEntry: "tr",
-      fieldEl: "input",
-    },
-    
-    readOnlyAttr: "readonly",
-    actions: [
-      "create", 
-      "modify", 
-      "discard", 
-      "save", 
-      "moveUp", 
-      "moveDown", 
-      "encreaseLevel", 
-      'decreaseLevel',
-      'breakdown'],
-    
-    btnsList: { 
-      create:  'Create new entity',
-      modify:  'Edit entity',
-      save: 'Save entity',
-      discard: 'Delete entity',
-      move_up: 'Move entity up',
-      move_down: 'Move entity down',
-      increase_level: 'Increase level of entity',
-      decrease_level: 'Increase level of entity'
-    },
+      contentNodes.forEach(function(node, index) {
 
-    levelSep: "_",
-    dot: ".",
-    idAttr: "id",
-    listFields: ["level","title","period","period_scale","cost","startFrom","endBy"],
+        // sheet.getBindings(node, collection);
 
-	
-	/*
-	 * Template for separate table row
-	 */
-	entityTemplate:function(settings) {
-	  
-	  let entity = document.createElement('tr');
-	  let entityDelete = null;
-	  
-	  //the panel with buttons
-	  let entityActions = document.createElement('th');
-	  entityActions.className = 'actions';
-	  
-	  //inserting each button to the button panel
-    for (let [action, title] of Object.entries(btnsList)) {
-       
-       if (action.toString() === 'discard') {
-         //separate button for deleting entry
-         entityDelete = document.createElement('th');
-         entityDelete.className = 'actions';
-         entityDelete.appendChild(addBtn(settings.actionEl, action, title));
-       }
-       else
-         entityActions.appendChild(addBtn(settings.actionEl, action, title));
-     }
-    
-    entity.appendChild(entityActions);
-	  
-	  //the column containing the level ID of the entity
-	  let entityFld = document.createElement('td');
-	  entityFld.className = 'level';
-	  entity.appendChild(entityFld);
-	  
-	  settings.fields.forEach(function(element) {
-	    
-	    entityFld = document.createElement('td');
-	    entityFld.className = element;
-	    entity.appendChild(entityFld);
-	    
-	  });
+      });
 
-	  if(entityDelete !== null)
-	    entity.appendChild(entityDelete);
-	  
-	  return entity;
-    
-	},
-	
-	
-	/*
-	 * draw button html and its necessary attributes
-	 */
-	addBtn: function(el, action, title) {
-	  
-    let btn = document.createElement(el);
-    btn.className = action;
-    
-    if (el === 'button') {
-      btn.setAttribute('name', action);
-      btn.setAttribute('value', action);
-      btn.setAttribute('title', title);
-      //use `${key} ${value}` to substitute classes by template
+    };
+
+    // initializing data for WBS
+    let init = function(records) {
+
+      if (records.length === 0)
+        return;
+
+      records.forEach(function(val, index) {
+
+        if (!!val.id && !!val.title) {
+          _self.addDeliverable(val.id, val.title);
+        }
+
+      });
+
+    };
+
+    // public methods
+    return {
+      add : addDeliverable,
+      init : init,
+      applyEvents : applyEvents,
+      event : event
     }
-    btn.innnerHTML = '<span class="invisible">' + title + '</span>';
-    
-    return btn;
-	},
-	
-	
-	/*
-	 * insert the input field into the entity of the multilevel table
-	 */
-  addField: function() {
-    
-    let inp = document.createElement('input');
-    inp.setAttribute('type','text');
-    inp.setAttribute('readonly','readonly');
-    
-    //set title and aria-label from customized settings
-    if (this.settings.actionForm) {
-      inp.setAttribute('form',this.settings.actionForm);
-    }
-      
-    //aditional class for users can be inserted
-    inp.className = element;
-  },
-	
-  
-	  /*
-     * Changing level of the entry to make as a subdirectory of the parent entry
-     */
-    decreaseLevel: function(e) {
-       
-      let lastChildLevel = null, prevRowLevel = null;
-      let actionBtn = e || this;
-      let previousNumber;
-         
-      let currentRow = $(actionBtn).closest('tr');
-      let currentId = $(actionBtn).closest('tr').attr(idAttr);       
-       
-      let allLevels = this.findLevel(currentId);
-      depthLevel = allLevels.lentgh;
-      
-      //get the 
-      if (depthLevel >1 ) previousNumber;    
-      previousNumber = allLevels;
-   
-      //must be tested with the level more than first
-      let similarLevel = new RegExp('^' + levelPrexif + previousNumber + '$');
-       
-       let rowSearch = $(actionBtn).closest('tbody').find('tr').toArray();
 
-       let i=0;
-       
-       while (prevRowLevel === null  &&  i < rowSearch.length+1) {
-         
-         if (similarLevel.test($(rowSearch[i]).attr(idAttr))) {
-           prevRowLevel = $(rowSearch[i]).attr(idAttr);
-         }
-             
-         i++;
-       }  
-       
-       if (prevRowLevel) lastChildLevel = hasSubDeliv(prevRowLevel);       
-       
-       //let newLevelId = 0;
-       if(lastChildLevel) {
-         lastChildLevel++;
-         $(currentRow).attr(idAttr,levelPrexif + previousNumber + levelSep + lastChildLevel);
-       } else {          
-         $(currentRow).attr(idAttr, levelPrexif + previousNumber + levelSep + 1);
-         //let subLevel 
-         //if(!subLevel)
-         //  return;
-       }
-         
-       let nextRow = $(currentRow).next() || null;
-       
-       while(nextRow) {
-         
-         $(nextRow)
-           .attr(idAttr,decOrdinalNumber(findLevel($(nextRow).attr(idAttr))));
-         
-         nextRow = $(nextRow).next() || null;
-       }
+  };
 
-     },
-	  
-     
-     /*
-      * edit button action to make any field edible
-      */
-     stateEdit: function(current_row,settings)
-     {
-       //set current row active
-       $(current_row).parent().children().removeClass(settings.activeRow);
-       $(current_row).addClass(settings.activeRow);
-        //there must the choice of editing whole table row
-        $.each(settings.fields, function( index, value ) {
-         $(current_row).find(structure.fieldEl+dot+value).removeAttr(readOnlyAttr);
-       });
-       
-        //focus to only first element
-       $(current_row).find(structure.fieldEl).first().focus();
-       //another button for saving the value must be changed to active state
-     
-     },
-     
-     
-     //current row is saved with ajax request
-     stateSave: function(current_row)
-     {
-       $.each(settings.fields, function( index, value ) {
-         $(current_row).find(constant.valSelector + "." + value).val();
-       });
-       //sending ajax request to update this row with needed values
-     },
-           
-       
-   /*
-   * Get the number of the parent level
+  /*
+   * templateBreakdown - connect template with WBS
    */
-   hasSubDeliv: function(currentId) {
-          
-     let similarLevel = new RegExp('^' + currentId + levelSep + "\\d$");
-     let lastChildLevel = null;     
-          
-     lastChildLevel =  $('#'+currentId)
-       .closest('tbody')
-       .find('tr')
-       .filter(function(index,element) {
-         if (similarLevel.test($(this).attr(idAttr))) return 1;
-        }).length;
-          
-     return lastChildLevel;
-   },
-        
-        
-  /*
-  * Find order number
-  */
-  findLevel: function(currentId) {
-         
-    let parsedLevel = 0, 
-      pureID,
-      numbers = [];
-              
-    if (this.settings.prefix) {
-      let prefix = currentId.lastIndexOf(settings.prefix);
-      if (prefix !== false) {
-        pureID = currentId.slice(prefix+1);
-        numbers = currentId.split(levelSep);
-       }
-     }
-            
-     return numbers;
-   },
-   
-  
-  /*
-  * Increase order number of the same level
-  */
-  incOrdinalNumber: function(numbersLevel) {
-       
-    numbersLevel[numbersLevel.length]--;
-       
-    return numbersLevel.join(levelSep);
-    
-  },
-       
-       
-  /*
-  * Increase order number of the same level
-  */
-  decOrdinalNumber: function(numbersLevel) {
-    
-    numbersLevel[numbersLevel.length]--;
-         
-    return numbersLevel.join(levelSep);
-    
-  }    
-	
-	
-	 // A really lightweight plugin wrapper around the constructor,
-    // preventing against multiple instantiations
-   /* $.fn[pluginName] = function ( options ) {
-        return this.each(function () {
-            if ( !$.data(this, "plugin_" + pluginName )) {
-                $.data( this, "plugin_" + pluginName,
-                new Plugin( this, options ));
-            }
-        });
-    }*/
-               
-};
+  let templateBreakdown = function(deliverables) {
+
+    var self = this;
+    // map array of passed in todos to an observableArray of Todo objects
+    self.deliverables = ko.observableArray(ko.utils.arrayMap(deliverables,
+        function(deliverables) {
+          return new Entry(todo.content, todo.done);
+        }));
+
+  };
+
+  // setting for template to find html marks for connecting correct event from
+  // the Model
+  let bindingRules = {
+
+    deliverables : {
+      foreach : viewModel.todos
+    },
+    deliverable : function() {
+      return this;
+    },
+
+  };
+
+  // initial empty list
+  let list = [];
+
+  var viewModel = new templateBreakdown(list || []);
+
+  // initial options
+  let options = {
+    id : 'WBS'
+  };
+
+  // setting up interface provider for template and model content
+  let templateProvider = new interfaceProvider(bindingRules);
+
+  // setting up the manager to control template during user interaction
+  let manager = new managerStructure(options);
+
+  // filling existing records to the breakdown sheet
+  manager.init(list);
+
+  // making template interactive for user
+  manager.applyEvents();
+
+})(jQuery, window, document);
