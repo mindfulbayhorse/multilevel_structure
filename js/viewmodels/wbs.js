@@ -4,9 +4,9 @@
 */
 define([
   'library/knockout',
+  'controller/recordmanager',
   'models/deliverable',
-  'models/records'
-], function (ko, Deliverable, Records) {
+], function (ko, RecordManager, Deliverable) {
   
   'use strict';
  
@@ -14,22 +14,42 @@ define([
     
     let self = this;
     
-    self.wbs = ko.observableArray(ko.utils.arrayMap(wbs, function (record) {
-      return new Deliverable(record.ID, record.title, record.fields);
-    })); 
-    
     self.current = ko.observable();
     
-    // add a new todo, when enter key is pressed
+    self.wbs = ko.observableArray();
+    
+    //changing current row in user interface
+    self.current.subscribe(function(newValue) {
+      
+    });    
+    
+    //create new empty record for deliverable
     self.add = function () {
       
-      let current = self.current();
-
-      if (current) {
-        console.log(Records.all[current]);
-        self.wbs.push(Records.all[current]);
+      let recordID = self.current();
+           
+      let currentRecord = self.wbs()[recordID];
+      
+      console.log(self.wbs()[recordID]);
+       
+      if (!!currentRecord) {    
+        
+        if (!currentRecord.title()) return false;
+        
+        recordID++;
       }
+   
+      self.wbs.push( new Deliverable(recordID, '', []));
+      RecordManager.addNewRecord(recordID, '', []);
+      self.current(recordID);
+      
+      return true; 
+      
     };
+    
+    self.setIsSelected = function (){
+      console.log(this.deliverable.id);
+    }
     
   };
   
