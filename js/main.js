@@ -17,25 +17,22 @@
   
   let bindingConfig = {    
     deliverables: {foreach: viewWBS.wbs},
-    deliverable: {},
-    recordTables: {foreach: RecordManager.recordTables},
-    record: function() { 
-      return { 
-        onFocus: this.deliverable.current, 
-        attr: {
-          id: this.deliverable.ID
-        }
-       };
-     },
     recordID: function() { return { text: this.deliverable.ID};},
     recordTitle: function() { 
       return { 
         value: this.deliverable.title,
-        valueUpdate: 'input',
-        click: viewWBS.setIsSelected
+        valueUpdate: 'input'
       }
     },
-    recordCreate: {click: function (){ viewWBS.add(viewWBS.current());}}
+    recordCreate: 
+      function (){
+      
+      return {
+        click: function (){ viewWBS.add(this);},
+        enable: viewWBS.setStatus(this),
+      }
+    }
+      
   };
   
   ko.bindingProvider.instance = new ko.customBindingProvider(bindingConfig); 

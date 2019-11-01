@@ -4,9 +4,9 @@
 */
 define([
   'library/knockout',
-  'controller/recordmanager',
+  'models/records',
   'models/deliverable',
-], function (ko, RecordManager, Deliverable) {
+], function (ko, RecordFactory, Deliverable) {
   
   'use strict';
  
@@ -16,40 +16,52 @@ define([
     
     self.current = ko.observable();
     
+    //all ordered records of deliverables
     self.wbs = ko.observableArray();
     
     //changing current row in user interface
     self.current.subscribe(function(newValue) {
-      
-    });    
+      console.log(newValue);
+    }); 
+    
+    //set current chosen entry in accodance to any changes in wbs
+    self.wbs.subscribe(function(changes) {
+      changes.forEach(function (element){
+        if (element.status === 'added') {
+          self.current(element.index);
+        }
+      });
+    }, this, "arrayChange");
+
     
     //create new empty record for deliverable
-    self.add = function () {
+    self.add = function (currentRecord) {
       
-      let recordID = self.current();
-           
-      let currentRecord = self.wbs()[recordID];
+      let recordID = null;
       
-      console.log(self.wbs()[recordID]);
-       
-      if (!!currentRecord) {    
+      if (!!currentRecord) {
+          
+        recordID = currentRecord.deliverable.ID();
         
-        if (!currentRecord.title()) return false;
-        
-        recordID++;
       }
-   
-      self.wbs.push( new Deliverable(recordID, '', []));
-      RecordManager.addNewRecord(recordID, '', []);
-      self.current(recordID);
       
+      let deliverable = RecordFactory.addNew(recordID, '', []);
+        
+      if (!!deliverable) self.wbs.push({
+        deliverable: deliverable
+      });
+ 
       return true; 
       
     };
     
-    self.setIsSelected = function (){
-      console.log(this.deliverable.id);
+    //set status of each row in wbs
+    self.setStatus = function (currentRecord) { 
+      
+      return !!currentRecord.deliverable.title();
+      
     }
+    
     
   };
   
