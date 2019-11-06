@@ -9,8 +9,6 @@ define([
 
   'use strict';
   
- 
-
   let RecordFactory = (function() {
     
     let records = {}; 
@@ -22,6 +20,7 @@ define([
         let currentRecord = records[recordID];
         let parentID = 0;
         let orderID = 0;
+        let previousRecord = null;
         
         if (!!currentRecord) {    
           
@@ -37,10 +36,11 @@ define([
             
             for (let [id, entry] of Object.entries(records)) {
               
+              //comparing records withing the same level
               if (parentID === entry.parentID()) {
                 
-                if (entry.order() >= orderID) {
-                  let previousRecord = entry;
+                if (entry.order() >= orderID) {                
+                  previousRecord = entry;
                   orderID = previousRecord.order(); 
                   orderID++;
                   previousRecord.order(orderID);
@@ -50,6 +50,10 @@ define([
                 
               }
                 
+            }
+            
+            if (!!previousRecord) {
+              records[previousRecord.ID()] = previousRecord;
             }
             
           } else {
@@ -66,6 +70,10 @@ define([
         
         return currentRecord; 
         
+      },
+      
+      getRecords: function () {
+        return records;
       }
     }
 

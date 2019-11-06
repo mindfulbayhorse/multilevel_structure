@@ -18,8 +18,6 @@ define([
       //create new empty record for deliverable
       addNewRecord: function(id, title, fields) {
         
-        console.log(id + ' - id');
-        
         let record  = RecordFactory.addNew(id, title, fields);
        
         if (record) {

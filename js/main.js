@@ -16,7 +16,7 @@
   let viewWBS = new ViewWBS([]);
   
   let bindingConfig = {    
-    deliverables: {foreach: viewWBS.wbs},
+    deliverables: {foreach: viewWBS.wbsAll},
     recordID: function() { return { text: this.deliverable.ID};},
     recordTitle: function() { 
       return { 
