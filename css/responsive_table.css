@@ -1,4 +1,8 @@
-
+#WBS .actions button{
+  padding: 0px;
+  border: none;
+  cursor: pointer;
+}
 
 th.actions button span{
   display: none;

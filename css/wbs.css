@@ -7,15 +7,19 @@
 	margin: 10% auto;
 }
 
-#WBS .actions button{
-  padding: 0px;
-  border: none;
-  cursor: pointer;
-}
+#WBS .row_only {
+	display: -ms-Flexbox;
+	-ms-box-orient: horizontal;
 
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
 
-#WBS .actions ul li{
-	list-style-type: none;
+	-webkit-flex-flow: row wrap;
+	-moz-flex-flow: row wrap;
+	-ms-flex-flow: row wrap;
+	flex-flow: row wrap;
 }
 
 #WBS button, #WBS input,
@@ -30,7 +34,6 @@
   margin: 0px;
   line-height: 20px;
 }
-
 
 #WBS select.form-control:not([size]):not([multiple]){
   height: auto;
@@ -70,4 +73,13 @@ table#wbs input{
   height: auto;
   line-height: 100%;
   color: #000000;
+}
+
+#WBS ul.actions{
+  
+}
+
+#WBS ul.actions,
+#WBS .actions ul li{
+  list-style-type: none;
 }

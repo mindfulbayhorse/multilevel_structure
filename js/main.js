@@ -31,6 +31,14 @@
         click: function (){ viewWBS.add(this);},
         enable: viewWBS.setStatus(this),
       }
+    },
+    decreaseLevel: 
+      function (){
+      
+      return {
+        click: function (){ viewWBS.decreaseLevel(this)},
+        enable: viewWBS.setStatus(this),
+      }
     }
       
   };
@@ -42,6 +50,5 @@
   
   viewWBS.current(0);
   viewWBS.add(); 
-  
 
 });
