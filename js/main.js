@@ -23,26 +23,22 @@
         valueUpdate: 'input'
       }
     },
+    //Add new deliverable
     recordCreate: 
-      function (){
-      
-      viewWBS.setStateEdited();
-      
-      return {
-        click: function (){ viewWBS.add(this);},
-        enable: viewWBS.setStatus(this),
-        visible: viewWBS.checkOrder(this)
-      }
-    },
+      function (){   
+        return {
+          click: function (){ viewWBS.add(this);},
+          visible: viewWBS.checkOrder(this),
+          enable: viewWBS.checkTitle(this)
+        }
+      },
+    //Break down current deliverable
     breakdown: 
       function (){
-      
-      return {
-        click: function (){ viewWBS.breakdown(this)},
-        enable: viewWBS.setStatus(this),
-      }
-    }
-      
+        return {
+          click: function (){ viewWBS.breakdown(this)},
+        }
+      } 
   };
   
   ko.bindingProvider.instance = new ko.customBindingProvider(bindingConfig); 

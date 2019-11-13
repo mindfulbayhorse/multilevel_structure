@@ -23,11 +23,6 @@ define([
       console.log(newValue);
     }); 
     
-    //all ordered records of deliverables
-    self.wbsAll= [];
-    
-    var test = ko.observableArray(self.wbs());
-    
     //sorting all deliverables in correct order according to ID of new records
     self.wbsAll = ko.computed(function () {
       
@@ -49,35 +44,6 @@ define([
     self.wbs.subscribe(function (changes) {
       
       changes.forEach(function (element){
-        
-        //changing ID of each deliverable while adding new one
-        if (element.status === 'added') {
-          
-          let previousRecord = null;
-          let currentRecord = null;
-          let parentID = element.value.deliverable.parentID();
-          let newOrderID = element.value.deliverable.order();
-            
-          self.wbs().forEach(function (current, index) {
-            
-            //comparing records withing the same level
-            if (parentID === current.deliverable.parentID()) {
-              
-              if (current.deliverable.order() >= newOrderID &&
-                  index !== element.index) {  
-
-                previousRecord = current.deliverable;
-                let orderID = previousRecord.order(); 
-                orderID++;
-                
-                current.deliverable.order(orderID);
-                //currentRecord = previousRecord;
-              }
-              
-            }
-          });
-      
-         }
         
       });
     }, this, "arrayChange");
@@ -127,43 +93,57 @@ define([
       
       let orderID = 1;
       let parentID = 0;
-      
+      let indexCurrent = 0;
+      let ID = 0;
+         
       if (!!currentRecord) {
         
         //get the current record ID
-        parentID = currentRecord.deliverable.ID();
+        ID = currentRecord.deliverable.ID();
+        orderID = currentRecord.deliverable.order();
+        parentID = currentRecord.deliverable.parentID();
         
-        let newRecord = new Deliverable(orderID, '', parentID, []);
-        
-        //new deliverable for user interface
-        if (!!deliverable) self.wbs.push({
-          deliverable: newRecord,
-          created: true
-        }); 
-        
+        self.wbs().forEach( function(element, index) {
+          
+          if (ID === element.deliverable.ID()) {
+            
+            indexCurrent = index;
+            
+            if (!!deliverable) self.wbs.push({
+              deliverable: new Deliverable(1, '', ID, []),
+              created: true
+            });
+
+          }
+               
+          if (!!indexCurrent && index > indexCurrent && 
+            parentID === element.deliverable.parentID()) {
+
+            orderID++;
+            element.deliverable.order(orderID);
+            
+          }
+          
+        });
+                
       }
       
     };
-    
-    //set status of each row when it is edited
-    self.setStatus = function (currentRecord){ 
+     
+    /*
+     * check if the title if edited or filled out
+     */
+    self.checkTitle = function (currentRecord){ 
       
-      if (!!currentRecord) return true;
+      if (!currentRecord.deliverable) return true;
       
       return !!currentRecord.deliverable.title();
       
-    }   
-    
-    //set status of each row when it is edited
-    self.setStateEdited = function (currentRecord){ 
-      
-      if (!!currentRecord) {
-        currentRecord.edited = !!currentRecord.deliverable.title();
-      }
-      
     } 
     
-    //set status of each row when it is edited
+    /*
+     * show the button new at the last entry of current level
+     */
     self.checkOrder = function (currentRecord){ 
       
       if (!currentRecord.deliverable) return true;
