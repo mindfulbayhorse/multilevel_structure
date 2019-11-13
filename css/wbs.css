@@ -26,7 +26,6 @@
 #WBS .input-group-addon, #WBS .input-group{
   padding: 0px;
   margin: 0px;
-  line-height: 20px;
 }
 
 #WBS select{
@@ -71,15 +70,10 @@ table#wbs input{
   margin: 0px;
   box-shadow: none;
   height: auto;
-  line-height: 100%;
   color: #000000;
 }
 
-#WBS ul.actions{
-  
-}
-
-#WBS ul.actions,
-#WBS .actions ul li{
+#WBS ul.actions li{
   list-style-type: none;
+  width: 20%;
 }

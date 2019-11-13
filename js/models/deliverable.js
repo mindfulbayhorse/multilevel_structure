@@ -19,7 +19,13 @@ define([
     this.parentID = ko.observable(parentID);
     this.fields = ko.observableArray(fields || []);
     this.ID = ko.pureComputed(function() {
-      return this.parentID() + "." + this.order();
+      
+      if (!!this.parentID()) {
+        return this.parentID() + "." + this.order();
+      } else {
+        return this.order();
+      }
+      
     }, this);
 
     return this;

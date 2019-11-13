@@ -6,8 +6,7 @@
   'library/knockout',
   'extends/provider',
   'viewmodels/wbs',
-  'controller/recordmanager',
-], function (ko, Provider, ViewWBS, RecordManager) {
+], function (ko, Provider, ViewWBS) {
   'use strict';
 
   // set ko's current bindingProvider equal to our new binding provider
@@ -16,9 +15,9 @@
   let viewWBS = new ViewWBS([]);
   
   let bindingConfig = {    
-    deliverables: {foreach: viewWBS.wbsAll},
+    deliverables: function() { return {foreach: viewWBS.wbsAll}},
     recordID: function() { return { text: this.deliverable.ID};},
-    recordTitle: function() { 
+    recordTitle: function() {     
       return { 
         value: this.deliverable.title,
         valueUpdate: 'input'
@@ -27,16 +26,19 @@
     recordCreate: 
       function (){
       
+      viewWBS.setStateEdited();
+      
       return {
         click: function (){ viewWBS.add(this);},
         enable: viewWBS.setStatus(this),
+        visible: viewWBS.checkOrder(this)
       }
     },
-    decreaseLevel: 
+    breakdown: 
       function (){
       
       return {
-        click: function (){ viewWBS.decreaseLevel(this)},
+        click: function (){ viewWBS.breakdown(this)},
         enable: viewWBS.setStatus(this),
       }
     }
@@ -48,7 +50,6 @@
   // bind a new instance of our view model to the page
   ko.applyBindings(viewWBS);
   
-  viewWBS.current(0);
-  viewWBS.add(); 
+  viewWBS.add([]); 
 
 });

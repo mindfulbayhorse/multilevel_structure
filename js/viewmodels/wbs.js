@@ -23,20 +23,30 @@ define([
       console.log(newValue);
     }); 
     
+    //all ordered records of deliverables
+    self.wbsAll= [];
+    
+    var test = ko.observableArray(self.wbs());
+    
     //sorting all deliverables in correct order according to ID of new records
-    self.wbsAll = ko.pureComputed(function () {
+    self.wbsAll = ko.computed(function () {
+      
       return self.wbs.sorted(function (left, right) {
-          if (left.deliverable.ID() === right.deliverable.ID()) return 0;
           
-          if (left.deliverable.ID() < right.deliverable.ID()) return -1;
+          let a = String(left.deliverable.ID());
+          let b = String(right.deliverable.ID());
           
-          if (left.deliverable.ID() > right.deliverable.ID()) return 1;
+          if (a < b) return -1;
+          
+          if (a > b) return 1;
+          
+          return 0;
       });
 
     });
 
     //set current chosen entry in accodance to any changes in wbs
-    self.wbs.subscribe(function(changes) {
+    self.wbs.subscribe(function (changes) {
       
       changes.forEach(function (element){
         
@@ -68,23 +78,36 @@ define([
           });
       
          }
+        
       });
     }, this, "arrayChange");
 
-    //create new empty record for deliverable
+    /*
+     * create new empty record for deliverable
+     */
     self.add = function (currentRecord) {
       
       let recordID = null;
       let parentID = 0;
       let orderID = 0;
       
-      if (!!currentRecord) {
+      if (!!currentRecord.deliverable) {
         
         //get the current record ID
         orderID = currentRecord.deliverable.order();
         parentID = currentRecord.deliverable.parentID();
         orderID++;
          
+      } else {
+        //new record if the parent is a root
+        self.wbs().forEach(function (current, index) {
+        
+            if (current.deliverable.parentID() === parentID) {
+              orderID = current.deliverable.order();
+            }
+        });
+        
+        orderID++;
       }
       
       let newRecord = new Deliverable(orderID, '', parentID, []);
@@ -92,70 +115,81 @@ define([
       //new deliverable for user interface
       if (!!deliverable) self.wbs.push({
         deliverable: newRecord,
-        
+        status: 'new'
       }); 
       
-    };
+    };  
     
-    //decrease Level of current Record and change ID
-    self.decreaseLevel = function (currentRecord) {
+    /*
+     * break down current entry on the sublevel entries
+     */
+    self.breakdown = function (currentRecord){
       
-      let previousOrder = currentRecord.deliverable.order();
-      let previousParent = currentRecord.deliverable.parentID();
+      let orderID = 1;
+      let parentID = 0;
       
-      let newParent = null;
-      let newOrder = 0;
-      
-      let decreasedOrder = previousOrder;
-      previousOrder--;
-      
-      self.wbs().forEach(function (current, index) {
+      if (!!currentRecord) {
         
-        if (previousParent === current.deliverable.parentID()) {
-
-          if (current.deliverable.order() === previousOrder) {  
-
-            newParent = current.deliverable.ID();
-
-          }
-        }
-      });
+        //get the current record ID
+        parentID = currentRecord.deliverable.ID();
+        
+        let newRecord = new Deliverable(orderID, '', parentID, []);
+        
+        //new deliverable for user interface
+        if (!!deliverable) self.wbs.push({
+          deliverable: newRecord,
+          created: true
+        }); 
+        
+      }
       
-      //before changing an order it must find out the childrens of previous parent
-      self.wbs().forEach(function (current, index) {
-          
-          if (!!newParent && newParent === current.deliverable.parentID()) {
-            newOrder = current.deliverable.order();
-          }
-      });
-      
-      newOrder++;
-      
-      currentRecord.deliverable.order(newOrder);
-      currentRecord.deliverable.parentID(newParent);
-      
-      //decrease ordinal number of all deliverables 
-      self.wbs().forEach(function (current, index) {
-      
-          if (previousParent === current.deliverable.parentID() &&
-              decreasedOrder < current.deliverable.order()) {
-            
-            current.deliverable.order(decreasedOrder);
-            
-            decreasedOrder++;
-          }
-          
-      });
-      
-    }
+    };
     
     //set status of each row when it is edited
     self.setStatus = function (currentRecord){ 
       
+      if (!!currentRecord) return true;
+      
       return !!currentRecord.deliverable.title();
       
-    }
+    }   
     
+    //set status of each row when it is edited
+    self.setStateEdited = function (currentRecord){ 
+      
+      if (!!currentRecord) {
+        currentRecord.edited = !!currentRecord.deliverable.title();
+      }
+      
+    } 
+    
+    //set status of each row when it is edited
+    self.checkOrder = function (currentRecord){ 
+      
+      if (!currentRecord.deliverable) return true;
+      
+      if (!currentRecord.deliverable.parentID()) return false;
+      
+      let currentOrder = currentRecord.deliverable.order();
+      let currentParentID = currentRecord.deliverable.parentID();
+      
+      let showBtn = false;
+      
+      //decrease ordinal number of all deliverables 
+      self.wbs().forEach(function (current, index) {
+      
+          if (currentParentID === current.deliverable.parentID()) {
+            if (currentOrder >= current.deliverable.order()) {
+            
+              showBtn = true;
+            
+            } else showBtn = false; 
+          }
+      });
+      
+      return showBtn;
+      
+    } 
     
   };
   

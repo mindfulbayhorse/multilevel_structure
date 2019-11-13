@@ -3,180 +3,161 @@
 /* 
 main styles for entire document
 */
-body{
-	font-family: Arial, Tahoma;
-	font-size: 12px;
-	margin: 0px;
-	padding: 0px;
+body {
+  font-family: Arial, Tahoma;
+  font-size: 12px;
+  margin: 0px;
+  padding: 0px;
 }
 
-
-ul, ol, li, div, span, p, a{
+ul, ol, li, div, span, p, a {
+  
 }
-
 
 /*
 styles for specific additional elements
 */
-.new_row{
-	clear: both;	
+.new_row {
+  clear: both;
 }
 
-.one_row{
-	display: -ms-Flexbox;
+.one_row {
+  display: -ms-Flexbox;
   -ms-box-orient: horizontal;
-
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flex;
   display: flex;
-
   -webkit-flex-flow: row wrap;
   -moz-flex-flow: row wrap;
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
 }
 
-
 /*
 styles for table
 */
-table{
-	border: 1px solid #000000;
-	margin: 0px;
-	width: 100%;		
-	border-collapse: collapse;
-	font-family: Arial, Tahoma, Helvetica, sans-serif;
-	font-size: 14px;
+table {
+  border: 1px solid #000000;
+  margin: 0px;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, Tahoma, Helvetica, sans-serif;
+  font-size: 14px;
 }
 
-
-table td{
-		border: 1px solid #000;
-		border-collapse: collapse;	
-		color: inherit;
-		font-weight: inherit;
-		vertical-align: top;
-		font-size: 14px;
-		line-height: 100%;
-    vertical-align: middle;
+table td {
+  border: 1px solid #000;
+  border-collapse: collapse;
+  color: inherit;
+  font-weight: inherit;
+  vertical-align: top;
+  font-size: 14px;
+  line-height: 100%;
+  vertical-align: middle;
 }
 
-table tr{
-		border-top: 1px solid #000;
-		border-bottom: 1px solid #000;	
-		padding: 0px;
+table tr {
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  padding: 0px;
 }
 
-table thead th{
-	background: #dbccc1;
+table thead th {
+  background: #dbccc1;
 }
 
-table tbody th{
-	background: #dbccc1;
+table tbody th {
+  background: #dbccc1;
 }
 
-table tr:nth-child(even)
-{
-	background: #ece4df;
+table tr:nth-child(even) {
+  background: #ece4df;
 }
 
-
-table tr:nth-child(odd) 
-{
-	background: #ece4df;
+table tr:nth-child(odd) {
+  background: #ece4df;
 }
-
 
 /* form fields */
-input, 
-textarea{
-	background-color: transparent;
-	border: 0px solid #fff;
-	font-size: 12px;
-	padding: 0px;
-	overflow: auto;
-	line-height: 100%;
-	width: 100%;
+input, textarea {
+  background-color: transparent;
+  border: 0px solid #fff;
+  font-size: 12px;
+  padding: 0px;
+  overflow: auto;
+  line-height: 100%;
+  width: 100%;
 }
 
-table td, table th{
-	padding: 0px;
+table td, table th {
+  padding: 0px;
 }
 
-
-table .sublevel td{
-	background: #e8eafa; 
-	color: #3e536e;
+table .sublevel td {
+  background: #e8eafa;
+  color: #3e536e;
 }
 
-
-table .inner_two td{
-	background: #dfe5ab; 
-	color: #3e536e;
+table .inner_two td {
+  background: #dfe5ab;
+  color: #3e536e;
 }
 
-
-table td.level{
-	width: 5%;	
+table td.level {
+  width: 5%;
   min-width: 60px;
-	text-align: left;
-	font-weight: bold;
-	padding: 0px 10px 0px 10px;
-	text-indent: 0px;	
+  text-align: left;
+  font-weight: bold;
+  padding: 0px 10px 0px 10px;
+  text-indent: 0px;
 }
 
-table td.title{
-	max-width: 30%;	
+table td.title {
+  max-width: 30%;
   min-width: 300px;
-	text-align: left;
-	font-weight: bold;
-	padding: 0px 0px 0px 5px;	
-	text-indent: 5px;
+  text-align: left;
+  font-weight: bold;
+  padding: 0px 0px 0px 5px;
+  text-indent: 5px;
 }
 
-table td.cost{
+table td.cost {
   width: 100px;
   padding: 0px 10px;
 }
 
-table td.time{
+table td.time {
   width: 120px;
   padding: 0px 10px;
 }
 
-table tr.sublevel td.title, table tr.sublevel td.level{	
-	text-indent: 10px;
+table tr.sublevel td.title, table tr.sublevel td.level {
+  text-indent: 10px;
 }
 
-table tr.inner_two td.title, table tr.inner_two td.level{	
-	text-indent: 20px;
+table tr.inner_two td.title, table tr.inner_two td.level {
+  text-indent: 20px;
 }
 
-
-table td.detailed{
-	width: 30%;		
-	text-align: left;
-	font-weight: normal;
-	padding: 0px 0px 0px 10px;	
+table td.detailed {
+  width: 30%;
+  text-align: left;
+  font-weight: normal;
+  padding: 0px 0px 0px 10px;
 }
 
-table th.actions{	
-	text-align: left;
-	font-weight: normal;
-	padding: 1px;	
-	background: #ece4df;
+table th.actions {
+  text-align: left;
+  font-weight: normal;
+  padding: 1px;
+  background: #ece4df;
 }
 
-table td.title input{
-	text-align: left;	
+table td.title input {
+  text-align: left;
 }
 
-.thoughtful{
-	text-align: center;
+.thoughtful {
+  text-align: center;
 }
-
-
-
-
-

@@ -5,11 +5,12 @@
 	<meta name="author" content="Olga Zhilkova" />
     <link href="css\wbs.css" rel="stylesheet" type="text/css" />
     <link href="css\style.css" rel="stylesheet" type="text/css" />
-	<title>WBS for review</title>
+	<title>WBS for edit</title>
 </head>
 <body>
-
-<table id="WBS">
+<main id="WBS">
+<div class="action_bar"><button name='create' data-template='recordCreate'><span>Create</span></button></div>
+<table>
     <caption>The table shows all deliverables for 
          project in the tree</caption>
     <thead>
@@ -30,7 +31,7 @@
                        <button name='create' data-template='recordCreate'><span>Create</span></button>
                      </li>
                      <li>
-                       <button name='decreaseLevel' data-template='decreaseLevel'><span>Decrease Level</span></button>
+                       <button name='breakdown' data-template='breakdown'><span>Breakdown</span></button>
                      </li>
                  </ul>
             </th>
@@ -48,6 +49,8 @@
  
     </tbody>
 </table>
+<div class="action_bar"><button name='create' data-template='recordCreate'><span>Create</span></button></div>
+</main>
 
 <form id="deliverable" name="deliverable" method="GET" action="">
     <input type="hidden" value="" name="id" />

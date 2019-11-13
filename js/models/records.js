@@ -72,6 +72,58 @@ define([
         
       },
       
+      //decrease Level of current Record and change ID
+      self.decreaseLevel = function (currentRecord) {
+        
+        let previousOrder = currentRecord.deliverable.order();
+        let previousParent = currentRecord.deliverable.parentID();
+        
+        let newParent = null;
+        let newOrder = 0;
+        
+        let decreasedOrder = previousOrder;
+        previousOrder--;
+        
+        self.wbs().forEach(function (current, index) {
+          
+          if (previousParent === current.deliverable.parentID()) {
+
+            if (current.deliverable.order() === previousOrder) {  
+
+              newParent = current.deliverable.ID();
+
+            }
+          }
+        });
+        
+        //before changing an order it must find out the childrens of previous parent
+        self.wbs().forEach(function (current, index) {
+            
+            if (!!newParent && newParent === current.deliverable.parentID()) {
+              newOrder = current.deliverable.order();
+            }
+        });
+        
+        newOrder++;
+        
+        currentRecord.deliverable.order(newOrder);
+        currentRecord.deliverable.parentID(newParent);
+        
+        //decrease ordinal number of all deliverables 
+        self.wbs().forEach(function (current, index) {
+        
+            if (previousParent === current.deliverable.parentID() &&
+                decreasedOrder < current.deliverable.order()) {
+              
+              current.deliverable.order(decreasedOrder);
+              
+              decreasedOrder++;
+            }
+            
+        });
+        
+      }; 
+      
       getRecords: function () {
         return records;
       }
