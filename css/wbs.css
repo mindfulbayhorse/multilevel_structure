@@ -22,12 +22,21 @@
 	flex-flow: row wrap;
 }
 
-#WBS button, #WBS input,
-#WBS .input-group-addon, #WBS .input-group{
+#WBS button, #WBS input{
   padding: 0px;
   margin: 0px;
 }
 
+#WBS table input, textarea {
+  background-color: transparent;
+  border: 0px solid #fff;
+  font-size: 12px;
+  padding: 0px;
+  overflow: auto;
+  line-height: 100%;
+  width: 100%;
+
+}
 #WBS select{
   padding: 0px 20px 0px 0px;
   margin: 0px;
@@ -63,7 +72,7 @@
 }
 
 
-table#wbs input{
+#wbs table input{
   border: 0px solid #fff;
   background: transparent;
   padding: 0px;
@@ -71,6 +80,31 @@ table#wbs input{
   box-shadow: none;
   height: auto;
   color: #000000;
+}
+
+#WBS .actions button{
+  padding: 0px;
+  border: none;
+  cursor: pointer;
+  width: 26px;
+  height: 26px;
+}
+
+#WBS .actions button span{
+  display: none;
+}
+
+#WBS .actions button.create{
+  padding: 0px;
+  border: none;
+  cursor: pointer;
+  background: url('../img/create_btn.png') 0px 0px no-repeat;
+}
+
+
+#WBS ul{
+  padding: 0px;
+  margin: 3px 0px 0px;
 }
 
 #WBS ul.actions li{

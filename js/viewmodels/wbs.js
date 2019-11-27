@@ -9,19 +9,39 @@ define([
   
   'use strict';
  
-  let ViewWBS = function (wbs) {
+  let ViewWBS = function (storageWBS) {
     
     let self = this;
     
-    self.current = ko.observable();
-    
     //all ordered records of deliverables
-    self.wbs = ko.observableArray();
+    self.wbs = ko.observableArray(ko.utils.arrayMap(storageWBS, function (record) {
+      return {deliverable: new Deliverable(record.order, record.title, record.parentID, [])};
+    }));
     
-    //changing current row in user interface
-    self.current.subscribe(function(newValue) {
-      console.log(newValue);
-    }); 
+    self.action = ko.observable();
+    
+    //cursor to truck newely added record
+    self.current = ko.observable({
+      deliverable: new Deliverable(0, '', 0, []), 
+      action: self.action,
+      isSelected: true});
+    
+    self.actions = ko.observableArray([
+      {value: 'chooseAction'},
+      {value: 'createNew'}, 
+      {value: 'moveUp'},
+      {value: 'breakDown'},
+      {value: 'moveDown'}
+    ]);
+
+    self.action.subscribe(function(newValue) {
+      
+      let chosenAction = self.current().action();
+
+      if (chosenAction === 'breakDown'){
+        self.breakdown();
+      }
+    });
     
     //sorting all deliverables in correct order according to ID of new records
     self.wbsAll = ko.computed(function () {
@@ -40,31 +60,23 @@ define([
 
     });
 
-    //set current chosen entry in accodance to any changes in wbs
-    self.wbs.subscribe(function (changes) {
-      
-      changes.forEach(function (element){
-        
-      });
-    }, this, "arrayChange");
-
     /*
      * create new empty record for deliverable
      */
-    self.add = function (currentRecord) {
+    self.add = function ({deliverable}) {
       
-      let recordID = null;
       let parentID = 0;
       let orderID = 0;
       
-      if (!!currentRecord.deliverable) {
+      if (!!deliverable) {
         
         //get the current record ID
-        orderID = currentRecord.deliverable.order();
-        parentID = currentRecord.deliverable.parentID();
+        orderID = deliverable.order();
+        parentID = deliverable.parentID();
         orderID++;
          
       } else {
+        
         //new record if the parent is a root
         self.wbs().forEach(function (current, index) {
         
@@ -73,97 +85,128 @@ define([
             }
         });
         
+        //increase last order ID of root level
         orderID++;
       }
       
       let newRecord = new Deliverable(orderID, '', parentID, []);
       
       //new deliverable for user interface
-      if (!!deliverable) self.wbs.push({
-        deliverable: newRecord,
-        status: 'new'
-      }); 
+      if (!!newRecord) self.wbs.push({deliverable: newRecord}); 
       
+    };  
+        
+    /*
+     * create new empty record for deliverable
+     */
+    self.addNew = function () {
+      
+      let parentID = 0;
+      let orderID = 0;
+      
+      if (!!self.current()) {
+        
+        //get the current record ID
+        orderID = self.current().deliverable.order();
+        orderID++;
+        self.current().deliverable.order(orderID);
+
+        self.wbs.push(self.current());
+      } 
     };  
     
     /*
      * break down current entry on the sublevel entries
      */
-    self.breakdown = function (currentRecord){
+    self.breakdown = function (){
       
-      let orderID = 1;
-      let parentID = 0;
-      let indexCurrent = 0;
-      let ID = 0;
-         
-      if (!!currentRecord) {
+      let parentID = self.current().deliverable.ID();
+      
+      self.action('chooseAction');
+      
+      self.current({
+          action: self.action,
+          deliverable: new Deliverable(1, '', parentID, []),
+          isSelected: true
+      });      
         
-        //get the current record ID
-        ID = currentRecord.deliverable.ID();
-        orderID = currentRecord.deliverable.order();
-        parentID = currentRecord.deliverable.parentID();
+      //insert new deliverable with the parentID of the current deliverable's ID
+      self.wbs.push(self.current());
+      
+    };
+    
+    //change the order of the current deliverable moving up the record
+    self.moveUp = function ({deliverable}){
+      
+      if (!!deliverable) {
         
-        self.wbs().forEach( function(element, index) {
+        let currentOrder = deliverable.order(); 
+        let currentParent = deliverable.parentID();
+        
+        //get the current deliverable ID and the level
+        self.wbs().forEach(function ({deliverable}, index) {
           
-          if (ID === element.deliverable.ID()) {
+          //increase ordinal number of the previous row
+          if (deliverable.parentID() === currentParent &&
+            currentOrder === deliverable.order()-1){
             
-            indexCurrent = index;
+            deliverable.order()++;
             
-            if (!!deliverable) self.wbs.push({
-              deliverable: new Deliverable(1, '', ID, []),
-              created: true
-            });
-
           }
-               
-          if (!!indexCurrent && index > indexCurrent && 
-            parentID === element.deliverable.parentID()) {
-
-            orderID++;
-            element.deliverable.order(orderID);
-            
+          
+          //decrease ordinal number of current row
+          if (deliverable.parentID() === currentParent &&
+              currentOrder === deliverable.order()){
+              
+            deliverable.order()--;
+              
           }
           
         });
-                
+        
       }
-      
-    };
+    }
      
-    /*
-     * check if the title if edited or filled out
-     */
-    self.checkTitle = function (currentRecord){ 
+    //check if the title if edited or filled out
+    self.checkTitle = function ({deliverable}){ 
       
-      if (!currentRecord.deliverable) return true;
+      if (!deliverable) return true;
       
-      return !!currentRecord.deliverable.title();
+      return !!deliverable.title();
       
     } 
     
     /*
      * show the button new at the last entry of current level
      */
-    self.checkOrder = function (currentRecord){ 
+    self.checkOrder = function ({deliverable}){ 
       
-      if (!currentRecord.deliverable) return true;
+      //show button if it is the root level
+      if (!deliverable) return true;
       
-      if (!currentRecord.deliverable.parentID()) return false;
+      //create new record is available only after the last record
+      if (!deliverable.parentID()) return false;
       
-      let currentOrder = currentRecord.deliverable.order();
-      let currentParentID = currentRecord.deliverable.parentID();
+      let currentOrder = deliverable.order();
+      let currentParentID = deliverable.parentID();
       
+      //set the visibility to true
       let showBtn = false;
       
-      //decrease ordinal number of all deliverables 
+      //find the last ID of all deliverable with the same level as current record's level
       self.wbs().forEach(function (current, index) {
       
           if (currentParentID === current.deliverable.parentID()) {
             if (currentOrder >= current.deliverable.order()) {
             
+              //always show the button if the orderinal number is larger
               showBtn = true;
             
-            } else showBtn = false; 
+            } else {
+              
+              //hide the button in any other cases
+              showBtn = false; 
+            }
           }
       });
       
@@ -171,6 +214,23 @@ define([
       
     } 
     
+    self.chooseAction = function (){
+      console.log(self.current());
+    }
+    
+    self.setCurrent = function (currentDeliverable){
+      self.current(currentDeliverable);
+    }
+    
+    
+    // internal computed observable that fires whenever anything changes in wbs
+    /*ko.computed(function () {
+      console.log(self.wbs);
+      localStorage.setItem('wbs-local', ko.toJSON(self.wbs));
+    }.bind(this)).extend({
+      rateLimit: { timeout: 500, method: 'notifyWhenChangesStop' }
+    }); // save at most twice per second
+    */
   };
   
   return ViewWBS;

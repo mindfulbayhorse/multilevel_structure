@@ -5,53 +5,59 @@
 	<meta name="author" content="Olga Zhilkova" />
     <link href="css\wbs.css" rel="stylesheet" type="text/css" />
     <link href="css\style.css" rel="stylesheet" type="text/css" />
-	<title>WBS for review</title>
+	<title>WBS for edit</title>
 </head>
 <body>
-
-<table id="WBS">
-    <caption>The table shows all deliverables for 
-         project in the tree</caption>
-    <thead>
-        <tr>
-             <td></td>
-             <th>Level</th>
-             <th>Title</th>
-             <th>Field</th>
-         </tr>
-     </thead>
-     <tbody data-template='deliverables'>
+<main id="WBS">
+    <div class="action_bar"><button name='create'>Find</button></div>
+    <form id="deliverable" name="deliverable" method="GET" action="">
+        <input maxlength='100' type="text" name="title" data-template='currentTitle'/>
+        <select name="parentID" data-template='choiceParent'>
+            <option>Nest to</option>
+        </select>
+        <button name='create' data-template='recordCreate'><span>Create</span></button>
+    </form>
+    <table>
+        <caption>The table shows all deliverables for 
+             project in the tree</caption>
+        <thead>
+            <tr>
+               <th></th>
+               <th>Level</th>
+               <th>Title</th>
+               <th>Cost</th>
+               <th></th>
+           </tr>
+        </thead>
+        <tbody data-template='deliverables'>
          
-         <tr tabindex='-1'>
+            <tr tabindex='-1' data-template='setCurrent'>
             
-            <th>
-                 <ul data-template='actions' class="actions row_only">
-                     <li>
-                       <button name='create' data-template='recordCreate'><span>Create</span></button>
-                     </li>
-                     <li>
-                       <button name='decreaseLevel' data-template='decreaseLevel'><span>Decrease Level</span></button>
-                     </li>
-                 </ul>
-            </th>
+                <th class="actions row_only">
+                    <button name='openTree' data-template='toggleFold'>Fold</button>
+                    <select data-template='recordActions'>
+                        <option data-template='optionAction'><button data-template='recordAction'></button></option>
+                    </select>              
+                </th>
 
-            <td data-template='recordID'></td>
-            <td>
-                <input type='text' data-template='recordTitle' 
-                   form='deliverable' name='title' value='' />
-            </td>
-            <td>
-                <input type='text' data-template='deliverableField' 
-                   form='deliverable' name='cost' value='' />
-            </td>
-        </tr>
+                <td data-template='recordID'></td>
+                <td data-template='_index'>
+                    <input type='text' data-template='recordTitle' 
+                       form='deliverable' name='title' value='' />
+                </td>
+                <td>
+                    <input type='text' data-template='recordField' 
+                       form='deliverable' value='' />
+                </td>
+                <th class="actions row_only">
+                   <button name='delete'>Delete</button>
+                </th>
+            </tr>
  
-    </tbody>
-</table>
-
-<form id="deliverable" name="deliverable" method="GET" action="">
-    <input type="hidden" value="" name="id" />
-</form>
+        </tbody>
+    </table>
+    
+</main>
 
 <script data-main="js/main" src="require.js"></script>
 </body>

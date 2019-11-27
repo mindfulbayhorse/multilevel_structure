@@ -12,6 +12,7 @@ define([
   // You can now create a bindingProvider that uses something different than
   // data-bind attributes
   let Provider = function (bindingObject) {
+    
     this.bindingObject = bindingObject;
 
     // determine if an element has any bindings
@@ -31,9 +32,23 @@ define([
           var bindingAccessor = this.bindingObject[classes[i]];
 
           if (bindingAccessor) {
-            var binding = typeof bindingAccessor == "function" ? bindingAccessor
-                .call(bindingContext.$data)
-                : bindingAccessor;
+            
+            let binding =  bindingContext;
+          
+            if (bindingContext.$index && classes[i]==='_index' ) {
+              binding = bindingContext.$index();
+            } else {
+            
+            if (typeof bindingAccessor === "function") {
+              
+                binding = bindingAccessor.call(bindingContext.$data);
+              
+            } else {
+              binding = bindingAccessor;
+            } 
+            
+            }
+
             ko.utils.extend(result, binding);
           }
         }
