@@ -13,32 +13,85 @@
   ko.customBindingProvider = Provider;
   
   //check local storage for todos
-  //let localWBS = ko.utils.parseJson(localStorage.getItem('wbs-local'));
+  //let localWBS = ko.utils.parseJson(localStorage.getItem('wbsLocal'));
   let localWBS = [];
   
   let viewWBS = new ViewWBS(localWBS);
   
-  let bindingConfig = {    
+  let bindingConfig = { 
+    //all record in WBS
+    deliverables: function() { return {foreach: viewWBS.wbsAll}},
+    //the title of current record
     currentTitle: function() {
       return {
-        value: viewWBS.current().deliverable.title,
-        attr: {
-          title: viewWBS.current().deliverable.order,
-        },
+        textInput: viewWBS.current().entry.title,
+        //class: viewWBS.validTitle(),
+        //hasFocus: viewWBS.validTitle()
+      }
+    },
+    //the cost of current record
+    currentCost: function() {
+      return {
+        value: viewWBS.current().entry.cost,
+        valueUpdate: 'input'
+      }
+    },
+    //the cost of current record
+    currentDateStart: function() {
+      return {
+        value: viewWBS.current().entry.dateStart,
+        valueUpdate: 'input'
+      }
+    },
+    //the cost of current record
+    currentDateEnd: function() {
+      return {
+        value: viewWBS.current().entry.dateEnd,
+        valueUpdate: 'input'
+      }
+    },
+    //id of the current record
+    recordID: function() { 
+      return { 
+        text: this.entry.ID
+      };
+    },
+    //title of the current record
+    recordTitle: function() {     
+      return { 
+        value: this.entry.title,
+        valueUpdate: 'input'
+      }
+    },
+    //cost of the current record
+    recordCost: function() {     
+      return { 
+        value: this.entry.cost,
         valueUpdate: 'input',
       }
     },
-    deliverables: function() { return {foreach: viewWBS.wbsAll}},
-    recordID: function() { 
+    //start date of the current record
+    recordDateStart: function() {  
       return { 
-        text: this.deliverable.ID
-      };
-    },
-    recordTitle: function() {     
-      return { 
-        value: this.deliverable.title,
-        valueUpdate: 'input'
+        value: this.entry.dateStart,
+        valueUpdate: 'input',
       }
+    },
+    //end date of the current record
+    recordDateEnd: function() {     
+      return { 
+        value: this.entry.dateEnd,
+        valueUpdate: 'input',
+      }
+    },
+    //choose action with current record
+    recordActions:
+      function (){
+        return {
+          foreach: viewWBS.actions,
+          value: this.action,
+          valueUpdate: 'input'
+        }
     },
     //set current record to update its status
     setCurrent: function (){
@@ -46,52 +99,19 @@
         hasFocus: viewWBS.setCurrent(this)
       }       
     },
-    _index: function(){
-       return{ 
-         attr: {
-          id: this
-         }
-       }
-    },
-    recordField: function() {     
-      return { 
-        value: this.deliverable.fields,
-        valueUpdate: 'input',
-      }
-    },
     //Add new deliverable
-    recordCreate: 
+    addNew: 
       function (){   
         return {
-          click: function (){viewWBS.add(this.deliverable);},
+          click: function (){viewWBS.addNew(this);},
           //visible: viewWBS.checkOrder(this),
           //enable: viewWBS.checkTitle(this)
         }
       },
-    //choose action with current record
-    recordActions:
-      function (){
-        return {
-          foreach: viewWBS.actions,
-          value: viewWBS.action,
-          valueUpdate: 'input'
-        }
-    },
-    //choose action with current record:
-    recordAction:
-      function (){
-        return {
-          value: this.value,
-          text: this.value
-        }
-    },
     //choose action with current record:
     optionAction:
       function (){
-        return {
-          value: this.value,
-          text: this.value
-        }
+        return this;
     },
     //Break down current deliverable
     breakdown: 
@@ -99,15 +119,6 @@
         return {
           click: function (){ viewWBS.breakdown(this)},
           enable: viewWBS.checkTitle(this)
-        }
-      },
-    //Add new deliverable
-    recordCreate: 
-      function (){   
-        return {
-          click: function (){viewWBS.addNew(viewWBS.current);},
-          //visible: viewWBS.checkOrder(this),
-          //enable: viewWBS.checkTitle(this)
         }
       },
   };

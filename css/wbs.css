@@ -7,6 +7,10 @@
 	margin: 10% auto;
 }
 
+#WBS table caption{
+  display: none;
+}
+
 #WBS .row_only {
 	display: -ms-Flexbox;
 	-ms-box-orient: horizontal;
@@ -47,30 +51,82 @@
   height: auto;
 }
 
-#WBS td.title{
+#WBS form.current {
+  border-width: 1.87px;
+  border-color: rgb(102, 102, 153);
+  border-style: solid;
+  background-color: rgb(204, 204, 255);
+  width: 100%;
+  
+  display: -ms-Flexbox;
+  -ms-box-orient: horizontal;
+
+  display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: flex;
+
+	-webkit-flex-flow: row wrap;
+	-moz-flex-flow: row wrap;
+	-ms-flex-flow: row wrap;
+	flex-flow: row wrap;
+	
+  -webkit-justify-content: space-between;
+	-moz-justify-content: space-between;
+	-ms-justify-content: space-between;
+	justify-content: space-between;
+	
+	-webkit-align-items: center;
+	-moz-align-items: center;
+	-ms-align-items: center;
+	align-items: center;
+}
+
+#WBS form.current input,
+#WBS form.current input:focus{
+  border-width: 1px;
+  border-color: rgb(102, 45, 145);
+  border-style: solid;
+  border-radius: 9px;
+  background-color: rgb(255, 255, 255);
+  padding: 6px 10px;
+  outline: none;
+  font-size: 14px;
+    margin: 15px 20px 15px 10px;
+}
+
+#WBS form.current input[type="submit"] {
+  border-width: 1px;
+  border-color: rgb(0, 51, 0);
+  border-style: solid;
+  border-radius: 5px;
+  background-color: rgb(51, 153, 102);
+  font-size: 14px;
+  font-family: "Arial";
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  text-transform: uppercase;
+  line-height: 1.286;
+  width: 250px;
+}
+
+#WBS form.current label {
+  font-size: 16px;
+  font-family: "Arial";
+  color: rgb(0, 0, 51);
+  font-weight: bold;
+  line-height: 1.125;
+}
+
+#WBS form.current input.title{
   width: 25%;
 }
 
-#WBS td.level{
+#WBS form.current input.cost,
+#WBS form.current input.dateStart,
+#WBS form.current input.dateEnd{
   width: 10%;
 }
-
-#WBS td.cost{
-  width: 15%;
-}
-
-#WBS td.time{
-  width: 5%;
-}
-
-#WBS td.scale_time{
-  width: 10%;
-}
-
-#WBS td.thousand{
-  width: 5%;
-}
-
 
 #wbs table input{
   border: 0px solid #fff;
@@ -80,6 +136,7 @@
   box-shadow: none;
   height: auto;
   color: #000000;
+
 }
 
 #WBS .actions button{

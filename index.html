@@ -10,12 +10,18 @@
 <body>
 <main id="WBS">
     <div class="action_bar"><button name='create'>Find</button></div>
-    <form id="deliverable" name="deliverable" method="GET" action="">
-        <input maxlength='100' type="text" name="title" data-template='currentTitle'/>
+    <form id="deliverable" name="deliverable" method="GET" action="" class="current">
+        <label for="title">Title:</label>
+        <input maxlength='100' type="text" name="title" class='title' data-template='currentTitle'/>
+        <label for="cost">Cost:</label>
+        <input maxlength='10' type="text" name="cost" class='cost' data-template='currentCost'/>
+        <label for="dateStart">Start date:</label>
+        <input maxlength='10' type="text" name="dateStart" class='dateStart' data-template='currentDateStart'/>
+        <label for="dateEnd">End date:</label><input maxlength='10' type="text" name="dateEnd" class='dateEnd' data-template='currentDateEnd'/>
         <select name="parentID" data-template='choiceParent'>
             <option>Nest to</option>
         </select>
-        <button name='create' data-template='recordCreate'><span>Create</span></button>
+        <input type="submit" name='create' value="Create" data-template='addNew'/>
     </form>
     <table>
         <caption>The table shows all deliverables for 
@@ -26,6 +32,8 @@
                <th>Level</th>
                <th>Title</th>
                <th>Cost</th>
+               <th>Date from</th>
+               <th>Date to</th>
                <th></th>
            </tr>
         </thead>
@@ -36,7 +44,7 @@
                 <th class="actions row_only">
                     <button name='openTree' data-template='toggleFold'>Fold</button>
                     <select data-template='recordActions'>
-                        <option data-template='optionAction'><button data-template='recordAction'></button></option>
+                        <option data-template='optionAction'></option>
                     </select>              
                 </th>
 
@@ -46,7 +54,15 @@
                        form='deliverable' name='title' value='' />
                 </td>
                 <td>
-                    <input type='text' data-template='recordField' 
+                    <input type='text' data-template='recordCost' 
+                       form='deliverable' value='' />
+                </td>
+                <td>
+                    <input type='text' data-template='recordDateStart' 
+                       form='deliverable' value='' />
+                </td>
+                <td>
+                    <input type='text' data-template='recordDateEnd' 
                        form='deliverable' value='' />
                 </td>
                 <th class="actions row_only">

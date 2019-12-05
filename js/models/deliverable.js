@@ -4,7 +4,7 @@
  * Deliverable primary and secondary data
  */
 define([
-	'library/knockout'
+	'library/knockout',
 ], function(ko) {
 
   'use strict';
@@ -12,12 +12,16 @@ define([
   /*
    * Deliverable 
    */
-  let Deliverable = function(order, title, parentID, fields) {
+  let Deliverable = function(order, title, parentID, cost, dateStart, dateEnd) {
 
     this.order = ko.observable(order);
     this.title = ko.observable(title);
     this.parentID = ko.observable(parentID);
-    this.fields = ko.observableArray(fields || []);
+    this.cost = ko.observable(cost);
+    
+    this.dateStart = ko.observable(dateStart);    
+    this.dateEnd = ko.observable(dateEnd);
+    this.state = ko.observable();
     this.ID = ko.pureComputed(function() {
       
       if (!!this.parentID()) {
