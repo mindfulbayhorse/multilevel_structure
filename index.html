@@ -3,78 +3,128 @@
 <head>
 	<meta http-equiv="content-type" content="text/html" />
 	<meta name="author" content="Olga Zhilkova" />
-    <link href="css\wbs.css" rel="stylesheet" type="text/css" />
-    <link href="css\style.css" rel="stylesheet" type="text/css" />
 	<title>WBS for edit</title>
+	<link rel="stylesheet" type="text/css" href="../css/normalize.css" />
+    <link href="css\wbs.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet/less" type="text/css" href="../less/rss_theme.less" />
+    <script data-main="js/main" src="require.js"></script>
 </head>
 <body>
-<main id="WBS">
-    <div class="action_bar"><button name='create'>Find</button></div>
-    <form id="deliverable" name="deliverable" method="GET" action="" class="current">
-        <label for="title">Title:</label>
-        <input maxlength='100' type="text" name="title" class='title' data-template='currentTitle'/>
-        <label for="cost">Cost:</label>
-        <input maxlength='10' type="text" name="cost" class='cost' data-template='currentCost'/>
-        <label for="dateStart">Start date:</label>
-        <input maxlength='10' type="text" name="dateStart" class='dateStart' data-template='currentDateStart'/>
-        <label for="dateEnd">End date:</label><input maxlength='10' type="text" name="dateEnd" class='dateEnd' data-template='currentDateEnd'/>
-        <select name="parentID" data-template='choiceParent'>
-            <option>Nest to</option>
-        </select>
-        <input type="submit" name='create' value="Create" data-template='addNew'/>
-    </form>
-    <table>
-        <caption>The table shows all deliverables for 
-             project in the tree</caption>
-        <thead>
-            <tr>
-               <th></th>
-               <th>Level</th>
-               <th>Title</th>
-               <th>Cost</th>
-               <th>Date from</th>
-               <th>Date to</th>
-               <th></th>
-           </tr>
-        </thead>
-        <tbody data-template='deliverables'>
-         
-            <tr tabindex='-1' data-template='setCurrent'>
-            
-                <th class="actions row_only">
-                    <button name='openTree' data-template='toggleFold'>Fold</button>
-                    <select data-template='recordActions'>
-                        <option data-template='optionAction'></option>
-                    </select>              
-                </th>
+    <div id="top_slogan">
+        <p class="title">Project performance</p>
+    </div>
+        
+	<div class="wide_screen flex_block one_row">
+	    <div class="left_nav">            
+	
+	    </div>
+	    <div class="right_main">            
+	        <main id="WBS">
+			    
+			    <form id="deliverable" name="deliverable" class="groupped flex_block one_row">
+			    
+			        <div class="flex_block one_column grid_rows col_1">
+			        
+			            <div class="flex_block one_column">
+			                <label for="title">Title:</label>
+			                <input maxlength='100' type="text" name="title" data-template='newTitle'/>
+			            </div> 	
+			            
+			            <div class="flex_block one_row">
+			            
+			              <div class="flex_block one_column">
+			                  <label for="dateStart">Start date:</label>
+			                  <input maxlength='10' type="text" name="dateStart" data-template='newDateStart'/>
+			              </div>
+			              
+			              <div class="flex_block one_column">
+			                  <label for="dateEnd">End date:</label>
+			                  <input maxlength='10' type="text" name="dateEnd" data-template='newDateEnd'/>
+			              </div>
+			              
+			            </div>		        
+			        </div>
+			        
+			        <div class="flex_block one_column grid_rows col_2">
+			            
+			            <div class="flex_block one_column">
+			                <label for="cost">Cost:</label>
+			                <input maxlength='10' type="text" name="cost" data-template='newCost'/>
+			            </div>
+			            
+			            <div class="flex_block one_column">
+			                <label for="cost">Work amount:</label>
+			                <input maxlength='10' type="text" name="period"/>
+			            </div>
+			            
+			        </div>
+			        
+			        <div class="flex_block one_column grid_rows col_3">
+			            
+			            <div class="flex_block one_column">
+			                <label for="parentID">Package is ready:</label>
+			                <input type="checkbox" name="package" />
+			            </div>
+			            
+			            <div class="flex_block one_column">
+			                <input type="submit" name='create' value="Create" data-template='addNew'/>
+			            </div>
+			            
+			        </div>
 
-                <td data-template='recordID'></td>
-                <td data-template='_index'>
-                    <input type='text' data-template='recordTitle' 
-                       form='deliverable' name='title' value='' />
-                </td>
-                <td>
-                    <input type='text' data-template='recordCost' 
-                       form='deliverable' value='' />
-                </td>
-                <td>
-                    <input type='text' data-template='recordDateStart' 
-                       form='deliverable' value='' />
-                </td>
-                <td>
-                    <input type='text' data-template='recordDateEnd' 
-                       form='deliverable' value='' />
-                </td>
-                <th class="actions row_only">
-                   <button name='delete'>Delete</button>
-                </th>
-            </tr>
- 
-        </tbody>
-    </table>
-    
-</main>
-
-<script data-main="js/main" src="require.js"></script>
+			    </form>
+			    
+			    <div class="action_panel">
+			      <ul>
+			          
+			      </ul>
+			    </div>
+			    
+			    <table>
+			        <caption>The table shows all deliverables for 
+			             project in the tree</caption>
+			        <thead>
+			            <tr>
+			               <th></th>
+			               <th>Level</th>
+			               <th>Title</th>
+			               <th>Cost</th>
+			               <th>Starts from</th>
+			               <th>Finishes on</th>
+			           </tr>
+			        </thead>
+			        <tbody data-template='deliverables'>
+			         
+			            <tr tabindex='-1' data-template='setCurrent'>
+			            
+			                <th class="actions row_only">
+			                    <button name='openTree' data-template='toggleFold'>Fold</button>         
+			                </th>
+			
+			                <td data-template='recordID'></td>
+			                <td data-template='_index'>
+			                    <input type='text' data-template='recordTitle' 
+			                       form='deliverable' name='title' value='' />
+			                </td>
+			                <td>
+			                    <input type='text' data-template='recordCost' 
+			                       form='deliverable' value='' />
+			                </td>
+			                <td>
+			                    <input type='text' data-template='recordDateStart' 
+			                       form='deliverable' value='' />
+			                </td>
+			                <td>
+			                    <input type='text' data-template='recordDateEnd' 
+			                       form='deliverable' value='' />
+			                </td>
+			            </tr>
+			 
+			        </tbody>
+			    </table>
+			    
+			</main>
+	    </div>
+	</div>
 </body>
 </html>

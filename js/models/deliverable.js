@@ -21,7 +21,8 @@ define([
     
     this.dateStart = ko.observable(dateStart);    
     this.dateEnd = ko.observable(dateEnd);
-    this.state = ko.observable();
+    this.state = ko.observable();    
+    
     this.ID = ko.pureComputed(function() {
       
       if (!!this.parentID()) {

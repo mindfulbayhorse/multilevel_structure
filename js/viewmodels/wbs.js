@@ -25,20 +25,14 @@ define([
     
     self.action = ko.observable();
     
-    self.currentUTC = self.currentDate.valueOf();
-    
-    self.newDeliverable = new Deliverable(0, '', 0, '0.00', self.currentUTC, null);
+    self.newDeliverable = ko.observable(new Deliverable(0, '', 0, '0.00', null, null));
     
     //cursor to truck newely added record
-    self.current = ko.observable({
-        entry: self.newDeliverable, 
-        action: self.action});
+    self.current = ko.observable();
 
     self.action.subscribe(function (newValue) { 
       
       let chosenAction = self.action();
-      
-      console.log(self.current());
       
       if (chosenAction === 'breakdown'){
         self.breakdown();
@@ -70,19 +64,19 @@ define([
       let parentID = 0;
       let orderID = 0;
       
-      if (!!self.current().entry && !!self.current().entry.title()) {
+      if (!!self.newDeliverable && !!self.newDeliverable().title()) {
         
         //get the current record ID
-        orderID = self.current().entry.order();
+        orderID = self.newDeliverable().order();
         orderID++;
-        self.current().entry.order(orderID);
+        self.newDeliverable().order(orderID);
+        
+        self.current({entry: self.newDeliverable()});
 
         self.wbs.push(self.current());
         
-        self.current({
-            entry: new Deliverable(orderID, '', 0, '0.00', self.currentUTC, null),
-            action: 'not_chosen'
-        });
+        self.newDeliverable(new Deliverable(0, '', 0, '0.00', null, null));
+        
       } 
 
     };

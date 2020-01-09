@@ -3,10 +3,13 @@
  * Olga Zhilkova
  */
 ;require([
+  'style/config', 
+  '//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js',
   'library/knockout',
   'extends/provider',
-  'viewmodels/wbs',
+  'viewmodels/wbs'
 ], function (ko, Provider, ViewWBS) {
+  
   'use strict';
 
   // set ko's current bindingProvider equal to our new binding provider
@@ -22,31 +25,30 @@
     //all record in WBS
     deliverables: function() { return {foreach: viewWBS.wbsAll}},
     //the title of current record
-    currentTitle: function() {
+    newTitle: function() {
       return {
-        textInput: viewWBS.current().entry.title,
-        //class: viewWBS.validTitle(),
-        //hasFocus: viewWBS.validTitle()
-      }
-    },
-    //the cost of current record
-    currentCost: function() {
-      return {
-        value: viewWBS.current().entry.cost,
+        value: viewWBS.newDeliverable().title,
         valueUpdate: 'input'
       }
     },
     //the cost of current record
-    currentDateStart: function() {
+    newCost: function() {
       return {
-        value: viewWBS.current().entry.dateStart,
+        value: viewWBS.newDeliverable().cost,
         valueUpdate: 'input'
       }
     },
     //the cost of current record
-    currentDateEnd: function() {
+    newDateStart: function() {
       return {
-        value: viewWBS.current().entry.dateEnd,
+        value: viewWBS.newDeliverable().dateStart,
+        valueUpdate: 'input'
+      }
+    },
+    //the cost of current record
+    newDateEnd: function() {
+      return {
+        value: viewWBS.newDeliverable().dateEnd,
         valueUpdate: 'input'
       }
     },
@@ -74,24 +76,15 @@
     recordDateStart: function() {  
       return { 
         value: this.entry.dateStart,
-        valueUpdate: 'input',
+        valueUpdate: 'input'
       }
     },
     //end date of the current record
     recordDateEnd: function() {     
       return { 
         value: this.entry.dateEnd,
-        valueUpdate: 'input',
+        valueUpdate: 'input'
       }
-    },
-    //choose action with current record
-    recordActions:
-      function (){
-        return {
-          foreach: viewWBS.actions,
-          value: this.action,
-          valueUpdate: 'input'
-        }
     },
     //set current record to update its status
     setCurrent: function (){
@@ -103,26 +96,11 @@
     addNew: 
       function (){   
         return {
-          click: function (){viewWBS.addNew(this);},
-          //visible: viewWBS.checkOrder(this),
-          //enable: viewWBS.checkTitle(this)
+          click: function (){viewWBS.addNew(viewWBS.newDeliverable)}
         }
-      },
-    //choose action with current record:
-    optionAction:
-      function (){
-        return this;
-    },
-    //Break down current deliverable
-    breakdown: 
-      function (){
-        return {
-          click: function (){ viewWBS.breakdown(this)},
-          enable: viewWBS.checkTitle(this)
-        }
-      },
+      }
   };
-  
+   
   ko.bindingProvider.instance = new ko.customBindingProvider(bindingConfig); 
   
   // bind a new instance of our view model to the page
