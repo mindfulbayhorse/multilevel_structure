@@ -8,26 +8,3 @@
 	margin: 20px 0px;
 }
 
-#WBS form .one_row .one_column{
-  width: 50%;
-}
-
-#WBS form .grid_rows .one_column{
-  width: 100%;
-}
-
-#WBS form .one_row .one_column input{
-  width: 80%;
-}
-
-#WBS form .col_1{
-  width: 45%;
-}
-
-#WBS form .col_2{
-  width: 35%;
-}
-
-#WBS form .col_3{
-  width: 20%;
-}

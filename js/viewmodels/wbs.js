@@ -25,7 +25,7 @@ define([
     
     self.action = ko.observable();
     
-    self.newDeliverable = ko.observable(new Deliverable(0, '', 0, '0.00', null, null));
+    self.newDeliverable = ko.observable(new Deliverable(0, '', 0, '0.00', null, null, false));
     
     //cursor to truck newely added record
     self.current = ko.observable();
@@ -75,7 +75,7 @@ define([
 
         self.wbs.push(self.current());
         
-        self.newDeliverable(new Deliverable(0, '', 0, '0.00', null, null));
+        self.newDeliverable(new Deliverable(0, '', 0, '0.00', null, null, false));
         
       } 
 
@@ -102,7 +102,7 @@ define([
       //self.action('not_chosen');
       
       self.current({
-        entry: new Deliverable(1, '', parentID, '0.00', self.currentUTC, null),
+        entry: new Deliverable(1, '', parentID, '0.00', self.currentUTC, null, false),
         action: 'not_chosen'   
       });
         
@@ -192,6 +192,7 @@ define([
     
     self.setCurrent = function (record){
       self.current(record);
+      console.log(self.current);
     }
     
     // internal computed observable that fires whenever anything changes in wbs

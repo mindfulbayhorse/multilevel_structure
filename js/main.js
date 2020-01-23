@@ -2,9 +2,7 @@
  * Implemenration of WBS
  * Olga Zhilkova
  */
-;require([
-  'style/config', 
-  '//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js',
+;require([ 
   'library/knockout',
   'extends/provider',
   'viewmodels/wbs'
@@ -12,18 +10,23 @@
   
   'use strict';
 
-  // set ko's current bindingProvider equal to our new binding provider
+  //set ko's current bindingProvider equal to our new binding provider
   ko.customBindingProvider = Provider;
   
   //check local storage for todos
   //let localWBS = ko.utils.parseJson(localStorage.getItem('wbsLocal'));
+  
   let localWBS = [];
   
   let viewWBS = new ViewWBS(localWBS);
   
   let bindingConfig = { 
-    //all record in WBS
+    //all records in WBS
     deliverables: function() { return {foreach: viewWBS.wbsAll}},
+    //actions list for each record in WBS
+    actions: function() {return {foreach: viewWBS.actions}},
+    //button for each action
+    action: function(){return this},
     //the title of current record
     newTitle: function() {
       return {
@@ -50,6 +53,12 @@
       return {
         value: viewWBS.newDeliverable().dateEnd,
         valueUpdate: 'input'
+      }
+    },
+    //the flag that current deliverable is the package
+    newPackage: function() {
+      return {
+        checked: viewWBS.newDeliverable().isPackage,
       }
     },
     //id of the current record
@@ -89,7 +98,8 @@
     //set current record to update its status
     setCurrent: function (){
       return {
-        hasFocus: viewWBS.setCurrent(this)
+        value: function(){ viewWBS.current },
+        valueUpdate: 'input'
       }       
     },
     //Add new deliverable

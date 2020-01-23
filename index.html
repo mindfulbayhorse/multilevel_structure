@@ -5,9 +5,15 @@
 	<meta name="author" content="Olga Zhilkova" />
 	<title>WBS for edit</title>
 	<link rel="stylesheet" type="text/css" href="../css/normalize.css" />
-    <link href="css\wbs.css" rel="stylesheet" type="text/css" />
+    <link href="css/wbs.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet/less" type="text/css" href="../less/rss_theme.less" />
-    <script data-main="js/main" src="require.js"></script>
+	<script>
+	 let less = {
+       env: "development",
+       useFileCache: false
+     };
+	 </script>
+	 <script src="js/library/less.js"></script>
 </head>
 <body>
     <div id="top_slogan">
@@ -23,7 +29,7 @@
 			    
 			    <form id="deliverable" name="deliverable" class="groupped flex_block one_row">
 			    
-			        <div class="flex_block one_column grid_rows col_1">
+			        <div class="flex_block grid_rows col_1">
 			        
 			            <div class="flex_block one_column">
 			                <label for="title">Title:</label>
@@ -63,7 +69,7 @@
 			            
 			            <div class="flex_block one_column">
 			                <label for="parentID">Package is ready:</label>
-			                <input type="checkbox" name="package" />
+			                <input type="checkbox" name="package" data-template='newPackage'/>
 			            </div>
 			            
 			            <div class="flex_block one_column">
@@ -75,8 +81,8 @@
 			    </form>
 			    
 			    <div class="action_panel">
-			      <ul>
-			          
+			      <ul data-template='actions'>
+			          <li><button data-template='action'></button></li>
 			      </ul>
 			    </div>
 			    
@@ -85,6 +91,7 @@
 			             project in the tree</caption>
 			        <thead>
 			            <tr>
+			               <th></th>
 			               <th></th>
 			               <th>Level</th>
 			               <th>Title</th>
@@ -98,7 +105,11 @@
 			            <tr tabindex='-1' data-template='setCurrent'>
 			            
 			                <th class="actions row_only">
-			                    <button name='openTree' data-template='toggleFold'>Fold</button>         
+			                    <button name='openTree'>Fold</button>         
+			                </th>
+			                
+			                <th>
+			                    <input type="radio" data-template="setCurrent" name="current">
 			                </th>
 			
 			                <td data-template='recordID'></td>
@@ -126,5 +137,6 @@
 			</main>
 	    </div>
 	</div>
+<script data-main="js/main" src="require.js"></script>
 </body>
 </html>

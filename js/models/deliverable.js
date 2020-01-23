@@ -12,7 +12,7 @@ define([
   /*
    * Deliverable 
    */
-  let Deliverable = function(order, title, parentID, cost, dateStart, dateEnd) {
+  let Deliverable = function(order, title, parentID, cost, dateStart, dateEnd, isPackage) {
 
     this.order = ko.observable(order);
     this.title = ko.observable(title);
@@ -21,7 +21,7 @@ define([
     
     this.dateStart = ko.observable(dateStart);    
     this.dateEnd = ko.observable(dateEnd);
-    this.state = ko.observable();    
+    this.isPackage = ko.observable();    
     
     this.ID = ko.pureComputed(function() {
       
