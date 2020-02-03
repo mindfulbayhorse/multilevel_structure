@@ -2,7 +2,11 @@
  * Implemenration of WBS
  * Olga Zhilkova
  */
-;require([ 
+;requirejs.config({
+  urlArgs: "bust=" +  (new Date()).getTime()
+});
+
+require([ 
   'library/knockout',
   'extends/provider',
   'viewmodels/wbs'
@@ -95,20 +99,19 @@
         valueUpdate: 'input'
       }
     },
-    //set current record to update its status
-    setCurrent: function (){
+    setCurrent: function(){
       return {
-        value: function(){ viewWBS.current },
-        valueUpdate: 'input'
-      }       
+        checkedValue: this,
+        checked: viewWBS.current
+      }
     },
     //Add new deliverable
     addNew: 
       function (){   
         return {
-          click: function (){viewWBS.addNew(viewWBS.newDeliverable)}
+          click: function(){viewWBS.addNew(viewWBS.newDeliverable)}
         }
-      }
+      }     
   };
    
   ko.bindingProvider.instance = new ko.customBindingProvider(bindingConfig); 

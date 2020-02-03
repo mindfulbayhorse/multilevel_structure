@@ -29,7 +29,7 @@ define([
     
     //cursor to truck newely added record
     self.current = ko.observable();
-
+    
     self.action.subscribe(function (newValue) { 
       
       let chosenAction = self.action();
@@ -37,6 +37,7 @@ define([
       if (chosenAction === 'breakdown'){
         self.breakdown();
       }
+      
     });
     
     //sorting all deliverables in correct order according to ID of new records
@@ -72,10 +73,10 @@ define([
         self.newDeliverable().order(orderID);
         
         self.current({entry: self.newDeliverable()});
-
-        self.wbs.push(self.current());
         
-        self.newDeliverable(new Deliverable(0, '', 0, '0.00', null, null, false));
+        self.wbs.push(self.current());
+
+        self.newDeliverable(new Deliverable(orderID, '', 0, '0.00', null, null, false));
         
       } 
 
@@ -189,11 +190,6 @@ define([
       return showBtn;
       
     } 
-    
-    self.setCurrent = function (record){
-      self.current(record);
-      console.log(self.current);
-    }
     
     // internal computed observable that fires whenever anything changes in wbs
     ko.computed(function () {
