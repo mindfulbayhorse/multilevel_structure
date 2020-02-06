@@ -40,7 +40,9 @@ define([
       
     });
     
-    //sorting all deliverables in correct order according to ID of new records
+    /*
+     * sorting all deliverables in correct order according to ID of new records
+     */
     self.wbsAll = ko.computed(function () {
       
       return self.wbs.sorted(function (left, right) {
@@ -81,18 +83,7 @@ define([
       } 
 
     };
-    
-    //validate title
-    self.validTitle = function (){
-      
-      if (!!self.current().title()) {
-        return '';
-      } else {
-        return 'err';
-      }
-      
-    }
-    
+       
     /*
      * break down current entry on the sublevel entries
      */
@@ -147,12 +138,15 @@ define([
     //check if the title if edited or filled out
     self.checkTitle = function ({entry}){ 
       
-      if (!entry) return true;
-      
       return !!entry.title();
       
     } 
     
+    //show errors during user input
+    self.showErrors = function(record){
+      
+      if (!self.checkTitle(record)) return record.entry.title();
+    }
     /*
      * show the button new at the last entry of current level
      */

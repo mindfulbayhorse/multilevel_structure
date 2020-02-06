@@ -105,13 +105,21 @@ require([
         checked: viewWBS.current
       }
     },
+    showErrors: {
+      text: 
+    }
     //Add new deliverable
     addNew: 
       function (){   
         return {
-          click: function(){viewWBS.addNew(viewWBS.newDeliverable)}
+          click: function(){viewWBS.addNew(viewWBS.newDeliverable)},
+          disable: function(){viewWBS.checkTitle(viewWBS.newDeliverable)}
         }
-      }     
+      },
+    validTitle:
+    {
+      visible: function(){viewWBS.checkTitle(this)}
+    }
   };
    
   ko.bindingProvider.instance = new ko.customBindingProvider(bindingConfig); 
