@@ -6,7 +6,7 @@ define([
   'library/knockout',
   'models/deliverable',
   'models/recordaction'
-], function (ko, Deliverable, actions) {
+], function (ko, Deliverable, Actions) {
   
   'use strict';
  
@@ -21,24 +21,22 @@ define([
     
     self.currentDate = Date.now();
     
-    self.actions = actions;
+    self.actions = Actions;
     
     self.action = ko.observable();
     
-    self.newDeliverable = ko.observable(new Deliverable(0, '', 0, '0.00', null, null, false));
+    self.errors = ko.observable();
+    
+    self.validFields = ko.observable(true);
+    
+    self.newDeliverable = new Deliverable(0, '', 0, '0.00', null, null, false);
+    
+    self.newDeliverable.valid = ko.pureComputed(function() {
+      return !self.newDeliverable.title();
+    }, self.newDeliverable);
     
     //cursor to truck newely added record
     self.current = ko.observable();
-    
-    self.action.subscribe(function (newValue) { 
-      
-      let chosenAction = self.action();
-      
-      if (chosenAction === 'breakdown'){
-        self.breakdown();
-      }
-      
-    });
     
     /*
      * sorting all deliverables in correct order according to ID of new records
@@ -67,18 +65,18 @@ define([
       let parentID = 0;
       let orderID = 0;
       
-      if (!!self.newDeliverable && !!self.newDeliverable().title()) {
+      if (!!self.newDeliverable && !!self.newDeliverable.title()) {
         
         //get the current record ID
-        orderID = self.newDeliverable().order();
+        orderID = self.newDeliverable.order();
         orderID++;
-        self.newDeliverable().order(orderID);
+        self.newDeliverable.order(orderID);
         
-        self.current({entry: self.newDeliverable()});
+        self.current({entry: self.newDeliverable});
         
         self.wbs.push(self.current());
 
-        self.newDeliverable(new Deliverable(orderID, '', 0, '0.00', null, null, false));
+        self.newDeliverable = new Deliverable(orderID, '', 0, '0.00', null, null, false);
         
       } 
 
@@ -91,15 +89,12 @@ define([
       
       let parentID = self.current().entry.ID();
       
-      //self.action('not_chosen');
-      
-      self.current({
-        entry: new Deliverable(1, '', parentID, '0.00', self.currentUTC, null, false),
-        action: 'not_chosen'   
-      });
+      //self.current({
+      //  entry: new Deliverable(1, '', parentID, '0.00', self.currentUTC, null, false),  
+      //});
         
       //insert new deliverable with the parentID of the current deliverable's ID
-      self.wbs.push(self.current());
+      //self.wbs.push(self.current());
       
     };
     
@@ -134,18 +129,41 @@ define([
         
       }
     }
+    
+    /*
+     * descend the order of the deliverable
+     */
+    self.moveDown = function(){
+      
+    }
+    
+    /*
+     * decrease the level of the deliverable
+     */
+    self.decreaseLevel = function(){
+      
+    }
+    
+    /*
+     * increase the level of the deliverable
+     */
+    self.elevateLevel = function(){
+      
+    }
      
-    //check if the title if edited or filled out
-    self.checkTitle = function ({entry}){ 
+    
+    self.validField = function(record){
       
-      return !!entry.title();
-      
-    } 
+      return !!record.title();
+        
+    }
     
     //show errors during user input
-    self.showErrors = function(record){
+    self.showErrors = function(){
       
-      if (!self.checkTitle(record)) return record.entry.title();
+      if (!self.checkTitle(self.current().entry.title())) self.errors('The title is empty!');
+      
+      return '';
     }
     /*
      * show the button new at the last entry of current level

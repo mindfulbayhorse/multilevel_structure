@@ -13,13 +13,11 @@ define([
    * Record state in WBS 
    */
   let allowedActions = ko.observableArray([
-      {value: 'not_chosen', text: 'Choose action', disabled: true},
-      {value: 'new', text: 'Add new', disabled: true}, 
-      {value: 'breakdown', text: 'Break down', disabled: true}, 
-      {value: 'moveup', text: 'Move up', disabled: true}, 
-      {value: 'movedown', text: 'Move down', disabled: true},
-      {value: 'elevatelevel', text: 'Elevate level', disabled: true},
-      {value: 'decreaselevel', text: 'Decrease level', disabled: true}
+      {id: 'breakdown', text: 'Break down', disabled: true}, 
+      {id: 'moveUp', text: 'Move up', disabled: true}, 
+      {id: 'moveDown', text: 'Move down', disabled: true},
+      {id: 'elevateLevel', text: 'Elevate level', disabled: true},
+      {id: 'decreaseLevel', text: 'Decrease level', disabled: true}
   ]);
 
   return allowedActions;

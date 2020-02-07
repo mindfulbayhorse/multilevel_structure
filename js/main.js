@@ -30,39 +30,45 @@ require([
     //actions list for each record in WBS
     actions: function() {return {foreach: viewWBS.actions}},
     //button for each action
-    action: function(){return this},
+    action: function(){ 
+      return {
+        html: this.text,
+        name: this.id,
+        click: viewWBS[this.id]
+      }
+    },
     //the title of current record
     newTitle: function() {
       return {
-        value: viewWBS.newDeliverable().title,
+        value: viewWBS.newDeliverable.title,
         valueUpdate: 'input'
       }
     },
     //the cost of current record
     newCost: function() {
       return {
-        value: viewWBS.newDeliverable().cost,
+        value: viewWBS.newDeliverable.cost,
         valueUpdate: 'input'
       }
     },
     //the cost of current record
     newDateStart: function() {
       return {
-        value: viewWBS.newDeliverable().dateStart,
+        value: viewWBS.newDeliverable.dateStart,
         valueUpdate: 'input'
       }
     },
     //the cost of current record
     newDateEnd: function() {
       return {
-        value: viewWBS.newDeliverable().dateEnd,
+        value: viewWBS.newDeliverable.dateEnd,
         valueUpdate: 'input'
       }
     },
     //the flag that current deliverable is the package
     newPackage: function() {
       return {
-        checked: viewWBS.newDeliverable().isPackage,
+        checked: viewWBS.newDeliverable.isPackage,
       }
     },
     //id of the current record
@@ -75,7 +81,8 @@ require([
     recordTitle: function() {     
       return { 
         value: this.entry.title,
-        valueUpdate: 'input'
+        valueUpdate: 'input',
+        class: this.entry.classTitle
       }
     },
     //cost of the current record
@@ -105,21 +112,12 @@ require([
         checked: viewWBS.current
       }
     },
-    showErrors: {
-      text: 
-    }
-    //Add new deliverable
-    addNew: 
-      function (){   
+    addNew: function (){   
         return {
           click: function(){viewWBS.addNew(viewWBS.newDeliverable)},
-          disable: function(){viewWBS.checkTitle(viewWBS.newDeliverable)}
+          disable: viewWBS.newDeliverable.valid
         }
-      },
-    validTitle:
-    {
-      visible: function(){viewWBS.checkTitle(this)}
-    }
+      }
   };
    
   ko.bindingProvider.instance = new ko.customBindingProvider(bindingConfig); 
