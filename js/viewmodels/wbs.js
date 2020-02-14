@@ -6,7 +6,7 @@ define([
   'library/knockout',
   'models/deliverable',
   'models/recordaction'
-], function (ko, Deliverable, Actions) {
+], function (ko, Deliverable, Action) {
   
   'use strict';
  
@@ -20,23 +20,24 @@ define([
     }));   
     
     self.currentDate = Date.now();
-    
-    self.actions = Actions;
-    
-    self.action = ko.observable();
-    
+        
     self.errors = ko.observable();
     
-    self.validFields = ko.observable(true);
+    self.collection = ko.observable({});
     
-    self.newDeliverable = new Deliverable(0, '', 0, '0.00', null, null, false);
+    self.validField = ko.observable(false);
     
-    self.newDeliverable.valid = ko.pureComputed(function() {
-      return !self.newDeliverable.title();
-    }, self.newDeliverable);
+    self.newDeliverable = ko.observable(new Deliverable(0, '', 0, '0.00', self.currentDate, null, false));
     
-    //cursor to truck newely added record
+    
+   
+    //current edited or last added deliverable
     self.current = ko.observable();
+    
+    //parent deliverable that is detailed with children deliverables
+    self.parent = ko.observable();
+    
+    self.higherLevels = ko.observableArray();
     
     /*
      * sorting all deliverables in correct order according to ID of new records
@@ -65,20 +66,32 @@ define([
       let parentID = 0;
       let orderID = 0;
       
-      if (!!self.newDeliverable && !!self.newDeliverable.title()) {
+      console.log(self.newDeliverable());
+      
+      if (!!self.newDeliverable() && self.newDeliverable().titleValid) {
         
         //get the current record ID
-        orderID = self.newDeliverable.order();
+        orderID = self.newDeliverable().order();
         orderID++;
-        self.newDeliverable.order(orderID);
+        self.newDeliverable().order(orderID);
         
-        self.current({entry: self.newDeliverable});
+        self.current({entry: self.newDeliverable()});
         
         self.wbs.push(self.current());
+        
+        //it is nesessary to ensure that there is no entry with the same ID, because previous entry will be overwitten by new
+        self.collection()[self.current().entry.ID()] = self.current().entry;
 
-        self.newDeliverable = new Deliverable(orderID, '', 0, '0.00', null, null, false);
+        self.newDeliverable(new Deliverable(orderID, '', 0, '0.00', self.currentDate, null, false));
+        
+        self.higherLevels(); 
+        
+        return true;
         
       } 
+      
+      
+      return false;
 
     };
        
@@ -87,21 +100,41 @@ define([
      */
     self.breakdown = function (){
       
-      let parentID = self.current().entry.ID();
+      self.parent(self.collection()[self.current().entry.ID()]);
       
-      //self.current({
-      //  entry: new Deliverable(1, '', parentID, '0.00', self.currentUTC, null, false),  
-      //});
-        
-      //insert new deliverable with the parentID of the current deliverable's ID
-      //self.wbs.push(self.current());
+      self.newDeliverable.parentID = self.current().entry.ID();
+      
+      self.newDeliverable.dateStart = self.current().entry.dateStart();
+      
+      self.current({entry: self.newDeliverable});
       
     };
+    
+    //get the level of the parent deliverable
+    self.currentLevel = function ({entry}){
+      
+      if (!!self.parent){
+        if (parent().ID() === entry.parentID()) return true;
+      } else {
+        if (entry.parentID() === 0) return true;
+      }
+      
+      return false;
+    }
+    
+    /*
+     * extract deliverable by its ID
+     */
+    self.getByID = function(ID){
+      
+      //it is necessary to update ID and check for renewal of other ID withing some amount of time
+      return self.collection()[ID];
+    }
     
     //change the order of the current deliverable moving up the record
     self.moveUp = function (){
       
-      if (!!self.current()) {
+      /*if (!!self.current()) {
         
         let currentOrder = self.current().order(); 
         let currentParent = self.current().parentID();
@@ -127,7 +160,7 @@ define([
           
         });
         
-      }
+      }*/
     }
     
     /*
@@ -138,10 +171,22 @@ define([
     }
     
     /*
+     * make moveUp button available for current deliverable
+     */
+    self.enableMoveUp = function (){
+      
+      if (self.current().entry.order()===0) {
+        return true;
+      }
+      
+      return false;
+    }
+    
+    /*
      * decrease the level of the deliverable
      */
     self.decreaseLevel = function(){
-      
+      return 
     }
     
     /*
@@ -151,12 +196,12 @@ define([
       
     }
      
-    
-    self.validField = function(record){
+    //validating necessary field to procede with operations on current deliverable
+    //self.validField = function(record){
       
-      return !!record.title();
+      //return !!record().title();
         
-    }
+    //}
     
     //show errors during user input
     self.showErrors = function(){
@@ -165,50 +210,24 @@ define([
       
       return '';
     }
-    /*
-     * show the button new at the last entry of current level
-     */
-    self.checkOrder = function (){ 
-      
-      //show button if it is the root level
-      if (!self.current()) return true;
-      
-      //create new record is available only after the last record
-      if (!self.current().entry.parentID()) return false;
-      
-      let currentOrder = self.current().entry.order();
-      let currentParentID = self.current().entry.parentID();
-      
-      //set the visibility to true
-      let showBtn = false;
-      
-      //find the last ID of all deliverable with the same level as current record's level
-      self.wbs().forEach(function (deliverable, index) {
-      
-          if (currentParentID === deliverable.parentID()) {
-            if (currentOrder >= deliverable.order()) {
-            
-              //always show the button if the orderinal number is larger
-              showBtn = true;
-            
-            } else {
-              
-              //hide the button in any other cases
-              showBtn = false; 
-            }
-          }
-      });
-      
-      return showBtn;
-      
-    } 
+    
+    //list of actions available in WBS for every delivarebl
+    let listActions = [
+        {id: 'breakdown', text: 'Break down', click: function () { return self.breakdown} },
+        {id: 'moveUp', text: 'Move up', disabled: function(){ return self.enableMoveUp }},
+        {id: 'moveDown', text: 'Move down'},
+        {id: 'elevateLevel', text: 'Elevate level'},
+        {id: 'decreaseLevel', text: 'Decrease level'}
+    ];
+    
+    self.actions = listActions;
     
     // internal computed observable that fires whenever anything changes in wbs
-    ko.computed(function () {
-      localStorage.setItem('wbsLocal', ko.toJSON(self.wbs()));
-    }.bind(this)).extend({
-      rateLimit: { timeout: 500, method: 'notifyWhenChangesStop' }
-    }); // save at most twice per second
+    //ko.computed(function () {
+    //  localStorage.setItem('wbsLocal', ko.toJSON(self.wbs()));
+    //}.bind(this)).extend({
+     // rateLimit: { timeout: 500, method: 'notifyWhenChangesStop' }
+    //}); // save at most twice per second
     
   };
   

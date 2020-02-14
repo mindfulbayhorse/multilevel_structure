@@ -32,7 +32,12 @@ define([
       }
       
     }, this);
-
+    
+    //validate title for empty string
+    this.titleValid = ko.observable(function() {
+      return !this.title();
+    });
+    
     return this;
     
   }

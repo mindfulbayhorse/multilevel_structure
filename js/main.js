@@ -2,10 +2,6 @@
  * Implemenration of WBS
  * Olga Zhilkova
  */
-;requirejs.config({
-  urlArgs: "bust=" +  (new Date()).getTime()
-});
-
 require([ 
   'library/knockout',
   'extends/provider',
@@ -27,48 +23,10 @@ require([
   let bindingConfig = { 
     //all records in WBS
     deliverables: function() { return {foreach: viewWBS.wbsAll}},
-    //actions list for each record in WBS
-    actions: function() {return {foreach: viewWBS.actions}},
-    //button for each action
-    action: function(){ 
+    //visible deliverables to match current parent
+    chosenDeliverables: function (){
       return {
-        html: this.text,
-        name: this.id,
-        click: viewWBS[this.id]
-      }
-    },
-    //the title of current record
-    newTitle: function() {
-      return {
-        value: viewWBS.newDeliverable.title,
-        valueUpdate: 'input'
-      }
-    },
-    //the cost of current record
-    newCost: function() {
-      return {
-        value: viewWBS.newDeliverable.cost,
-        valueUpdate: 'input'
-      }
-    },
-    //the cost of current record
-    newDateStart: function() {
-      return {
-        value: viewWBS.newDeliverable.dateStart,
-        valueUpdate: 'input'
-      }
-    },
-    //the cost of current record
-    newDateEnd: function() {
-      return {
-        value: viewWBS.newDeliverable.dateEnd,
-        valueUpdate: 'input'
-      }
-    },
-    //the flag that current deliverable is the package
-    newPackage: function() {
-      return {
-        checked: viewWBS.newDeliverable.isPackage,
+        visible: viewWBS.currentLevel
       }
     },
     //id of the current record
@@ -112,12 +70,81 @@ require([
         checked: viewWBS.current
       }
     },
-    addNew: function (){   
-        return {
-          click: function(){viewWBS.addNew(viewWBS.newDeliverable)},
-          disable: viewWBS.newDeliverable.valid
-        }
+    //actions list for each record in WBS
+    actions: function() {return {foreach: viewWBS.actions}},
+    //button for each action
+    action: function(){ 
+      return {
+        html: this.text,
+        name: this.id,
+        click: this.click
       }
+    },
+    //the title of current record
+    newTitle: function() {
+      return {
+        value: viewWBS.newDeliverable().title,
+        valueUpdate: 'input'
+      }
+    },
+    //the cost of current record
+    newCost: function() {
+      return {
+        value: viewWBS.newDeliverable().cost,
+        valueUpdate: 'input'
+      }
+    },
+    //the cost of current record
+    newDateStart: function() {
+      return {
+        value: viewWBS.newDeliverable.dateStart,
+        valueUpdate: 'input'
+      }
+    },
+    //the cost of current record
+    newDateEnd: function() {
+      return {
+        value: viewWBS.newDeliverable.dateEnd,
+        valueUpdate: 'input'
+      }
+    },
+    //the flag that current deliverable is the package
+    newPackage: function() {
+      return {
+        checked: viewWBS.newDeliverable.isPackage,
+      }
+    },
+    //add new deliverable from the form
+    addNew: function (){
+      return {
+        click: viewWBS.addNew//,
+      //disable: viewWBS.validField
+      }
+    },  
+    //add new deliverable from the form
+    newRequest: function(){
+      return {
+        submit: function(){ return false;}
+      }
+    }, 
+    //hint for filling necessary title
+    validTitle: {
+      visible: viewWBS.validField
+    },
+    //the flag that current deliverable is the package
+    parentTitle: function() {
+        return {
+          text: viewWBS.parent.title,
+        }
+    },
+    showErrMsg: {
+      visible: viewWBS.validField,
+    },
+    treeLevels: function () { return {foreach: viewWBS.wbsAll}},
+    //show the links for the curent level of WBS
+    titleLevel: {
+      visible: function (){ return viewWBS.currentLevel(this) }
+    }
   };
    
   ko.bindingProvider.instance = new ko.customBindingProvider(bindingConfig); 

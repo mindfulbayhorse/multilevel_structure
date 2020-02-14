@@ -8,18 +8,22 @@ define([
 ], function(ko) {
 
   'use strict';
-
+  
   /*
-   * Record state in WBS 
+   * Action 
    */
-  let allowedActions = ko.observableArray([
-      {id: 'breakdown', text: 'Break down', disabled: true}, 
-      {id: 'moveUp', text: 'Move up', disabled: true}, 
-      {id: 'moveDown', text: 'Move down', disabled: true},
-      {id: 'elevateLevel', text: 'Elevate level', disabled: true},
-      {id: 'decreaseLevel', text: 'Decrease level', disabled: true}
-  ]);
+  let recordAction = function(id, title, exec) {
 
-  return allowedActions;
+    this.id = id;
+    this.text = title;
+    this.disabled = ko.observable(false);
+    this.click = exec;
+    
+    return this;
+    
+  }
+
+
+  return recordAction;
     
 });
