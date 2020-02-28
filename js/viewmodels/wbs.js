@@ -28,8 +28,6 @@ define([
     self.validField = ko.observable(false);
     
     self.newDeliverable = ko.observable(new Deliverable(0, '', 0, '0.00', self.currentDate, null, false));
-    
-    
    
     //current edited or last added deliverable
     self.current = ko.observable();
@@ -37,8 +35,20 @@ define([
     //parent deliverable that is detailed with children deliverables
     self.parent = ko.observable();
     
-    self.higherLevels = ko.observableArray();
     
+    //actions are available
+    self.actionsBar = ko.observable(false);
+    
+    self.current.subscribe(function(newValue) {
+      
+      if (!!newValue) {
+        self.actionsBar(true);
+      } else {
+        self.actionsBar(false);
+      }
+      
+      
+    });
     /*
      * sorting all deliverables in correct order according to ID of new records
      */
@@ -66,8 +76,6 @@ define([
       let parentID = 0;
       let orderID = 0;
       
-      console.log(self.newDeliverable());
-      
       if (!!self.newDeliverable() && self.newDeliverable().titleValid) {
         
         //get the current record ID
@@ -75,21 +83,21 @@ define([
         orderID++;
         self.newDeliverable().order(orderID);
         
-        self.current({entry: self.newDeliverable()});
+        //self.current({entry: self.newDeliverable()});
         
-        self.wbs.push(self.current());
+        //self.wbs.push(self.current());
+        
+        self.wbs.push({entry: self.newDeliverable()});
         
         //it is nesessary to ensure that there is no entry with the same ID, because previous entry will be overwitten by new
-        self.collection()[self.current().entry.ID()] = self.current().entry;
+        //self.collection()[self.current().entry.ID()] = self.current().entry;
 
         self.newDeliverable(new Deliverable(orderID, '', 0, '0.00', self.currentDate, null, false));
         
-        self.higherLevels(); 
         
         return true;
         
       } 
-      
       
       return false;
 
@@ -134,33 +142,7 @@ define([
     //change the order of the current deliverable moving up the record
     self.moveUp = function (){
       
-      /*if (!!self.current()) {
-        
-        let currentOrder = self.current().order(); 
-        let currentParent = self.current().parentID();
-        
-        //get the current deliverable ID and the level
-        self.wbs().forEach(function (deliverable, index) {
-          
-          //increase ordinal number of the previous row
-          if (deliverable.parentID() === currentParent &&
-            currentOrder === deliverable.order()-1){
-            
-            deliverable.order()++;
-            
-          }
-          
-          //decrease ordinal number of current row
-          if (deliverable.parentID() === currentParent &&
-              currentOrder === deliverable.order()){
-              
-            deliverable.order()--;
-              
-          }
-          
-        });
-        
-      }*/
+      //try to use new ES 6 operators
     }
     
     /*

@@ -43,6 +43,9 @@ require([
         class: this.entry.classTitle
       }
     },
+    actionsBar: {
+      visible: viewWBS.actionsBar
+    },
     //cost of the current record
     recordCost: function() {     
       return { 
@@ -62,6 +65,13 @@ require([
       return { 
         value: this.entry.dateEnd,
         valueUpdate: 'input'
+      }
+    },
+    sactionsBar: function(){
+      return {
+        visible: function (){
+          viewWBS.actionsBar
+        }
       }
     },
     setCurrent: function(){
@@ -144,6 +154,9 @@ require([
     //show the links for the curent level of WBS
     titleLevel: {
       visible: function (){ return viewWBS.currentLevel(this) }
+    },
+    request: {
+      submit: function (){ return false;}
     }
   };
    
