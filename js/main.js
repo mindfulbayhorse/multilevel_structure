@@ -14,11 +14,9 @@ require([
   ko.customBindingProvider = Provider;
   
   //check local storage for todos
-  //let localWBS = ko.utils.parseJson(localStorage.getItem('wbsLocal'));
+  let localWBS = ko.utils.parseJson(localStorage.getItem('wbsLocal'));
   
-  let localWBS = [];
-  
-  let viewWBS = new ViewWBS(localWBS);
+  let viewWBS = new ViewWBS([]);
   
   let bindingConfig = { 
     //all records in WBS
@@ -67,33 +65,49 @@ require([
         valueUpdate: 'input'
       }
     },
-    sactionsBar: function(){
-      return {
-        visible: function (){
-          viewWBS.actionsBar
-        }
-      }
-    },
+    //selected entry from table
     setCurrent: function(){
       return {
         checkedValue: this,
         checked: viewWBS.current
       }
     },
+    //selected entry from table
+    isSelected: function()
+      {
+        return {
+          hasFocus: this.entry.isSelected,
+          class: this.entry.isActive,
+          visible:  viewWBS.parent()===this.entry.parentID()
+        }
+        
+      },
     //actions list for each record in WBS
     actions: function() {return {foreach: viewWBS.actions}},
     //button for each action
     action: function(){ 
       return {
         html: this.text,
-        name: this.id,
-        click: this.click
+        attr: {name: this.id},
+        click: function () { return viewWBS[this.id]() }
+      }
+    },
+    actionsBar: function(){
+      return {
+        visible: viewWBS.actionsBar
       }
     },
     //the title of current record
     newTitle: function() {
       return {
         value: viewWBS.newDeliverable().title,
+        valueUpdate: 'input'
+      }
+    },
+    //the title of current record
+    newID: function() {
+      return {
+        value: viewWBS.newDeliverable().ID,
         valueUpdate: 'input'
       }
     },
@@ -127,8 +141,7 @@ require([
     //add new deliverable from the form
     addNew: function (){
       return {
-        click: viewWBS.addNew//,
-      //disable: viewWBS.validField
+        click: viewWBS.addNew
       }
     },  
     //add new deliverable from the form
