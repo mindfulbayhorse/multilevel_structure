@@ -23,18 +23,14 @@ define([
         
     self.errors = ko.observable();
     
-    self.collection = ko.observable({});
-    
-    self.validField = ko.observable(false);
-    
-    self.newDeliverable = ko.observable(new Deliverable(0, '', 0, '0.00', self.currentDate, null, false));
-   
     //current edited or last added deliverable
-    self.current = ko.observable();
+    self.current = ko.observable(false);
     
     //parent deliverable that is detailed with children deliverables
-    self.parent = ko.observable();
+    self.parent = ko.observable(0);
     
+    //new deliverable
+    self.newDeliverable = ko.observable(new Deliverable(0, '', self.parent(), '0.00', self.currentDate, null, false));
     
     //actions are available
     self.actionsBar = ko.observable(false);
@@ -47,8 +43,8 @@ define([
         self.actionsBar(false);
       }
       
-      
     });
+    
     /*
      * sorting all deliverables in correct order according to ID of new records
      */
@@ -73,7 +69,6 @@ define([
      */
     self.addNew = function () {
       
-      let parentID = 0;
       let orderID = 0;
       
       if (!!self.newDeliverable() && self.newDeliverable().titleValid) {
@@ -81,19 +76,12 @@ define([
         //get the current record ID
         orderID = self.newDeliverable().order();
         orderID++;
+        
         self.newDeliverable().order(orderID);
         
-        //self.current({entry: self.newDeliverable()});
-        
-        //self.wbs.push(self.current());
-        
         self.wbs.push({entry: self.newDeliverable()});
-        
-        //it is nesessary to ensure that there is no entry with the same ID, because previous entry will be overwitten by new
-        //self.collection()[self.current().entry.ID()] = self.current().entry;
 
-        self.newDeliverable(new Deliverable(orderID, '', 0, '0.00', self.currentDate, null, false));
-        
+        self.newDeliverable(new Deliverable(orderID, '', self.parent(), '0.00', self.currentDate, null, false));
         
         return true;
         
@@ -108,26 +96,22 @@ define([
      */
     self.breakdown = function (){
       
-      self.parent(self.collection()[self.current().entry.ID()]);
+      self.parent(self.current().entry.ID());
       
-      self.newDeliverable.parentID = self.current().entry.ID();
+      self.newDeliverable().parentID(self.parent());
+      self.newDeliverable().order(0);
       
-      self.newDeliverable.dateStart = self.current().entry.dateStart();
+      self.newDeliverable().dateStart(self.current().entry.dateStart());
       
       self.current({entry: self.newDeliverable});
+      console.log(self.parent());
       
     };
     
-    //get the level of the parent deliverable
-    self.currentLevel = function ({entry}){
-      
-      if (!!self.parent){
-        if (parent().ID() === entry.parentID()) return true;
-      } else {
-        if (entry.parentID() === 0) return true;
-      }
-      
-      return false;
+    self.setCurrent = function(record){
+      self.current(record);
+
+      console.log(self.current());
     }
     
     /*
@@ -179,11 +163,13 @@ define([
     }
      
     //validating necessary field to procede with operations on current deliverable
-    //self.validField = function(record){
+    self.select = function(record){
       
-      //return !!record().title();
+      console.log(record);
+      self.current(record);
         
-    //}
+    }
+    
     
     //show errors during user input
     self.showErrors = function(){
@@ -194,20 +180,19 @@ define([
     }
     
     //list of actions available in WBS for every delivarebl
-    let listActions = [
-        {id: 'breakdown', text: 'Break down', click: function () { return self.breakdown} },
+    self.actions = [
+        {id: 'breakdown', text: 'Break down'},
         {id: 'moveUp', text: 'Move up', disabled: function(){ return self.enableMoveUp }},
         {id: 'moveDown', text: 'Move down'},
         {id: 'elevateLevel', text: 'Elevate level'},
         {id: 'decreaseLevel', text: 'Decrease level'}
     ];
     
-    self.actions = listActions;
-    
     // internal computed observable that fires whenever anything changes in wbs
-    //ko.computed(function () {
-    //  localStorage.setItem('wbsLocal', ko.toJSON(self.wbs()));
-    //}.bind(this)).extend({
+    ko.computed(function () {
+      localStorage.setItem('wbsLocal', ko.toJSON(self.wbs()));
+    }.bind(this));
+    //.extend({
      // rateLimit: { timeout: 500, method: 'notifyWhenChangesStop' }
     //}); // save at most twice per second
     
