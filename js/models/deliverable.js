@@ -21,7 +21,9 @@ define([
     
     this.dateStart = ko.observable(dateStart);    
     this.dateEnd = ko.observable(dateEnd);
-    this.isPackage = ko.observable();    
+    this.isPackage = ko.observable(false);
+    
+    this.isSelected = ko.observable(false);
     
     this.ID = ko.pureComputed(function() {
       
@@ -38,6 +40,17 @@ define([
       return !this.title();
     });
     
+    
+    this.isActive = ko.pureComputed(function() {
+      
+      if (this.isSelected()) {
+        return 'active';
+      }
+      
+      return '';
+      
+    }, this);
+
     return this;
     
   }
