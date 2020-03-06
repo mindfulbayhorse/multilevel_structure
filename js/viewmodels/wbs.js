@@ -27,7 +27,7 @@ define([
     self.current = ko.observable(false);
     
     //parent deliverable that is detailed with children deliverables
-    self.parent = ko.observable(0);
+    self.parent = ko.observable(false);
     
     //new deliverable
     self.newDeliverable = ko.observable(new Deliverable(0, '', self.parent(), '0.00', self.currentDate, null, false));
@@ -63,6 +63,18 @@ define([
       });
 
     });
+    
+    
+    self.calculatedParent = ko.pureComputed(function() {
+      
+      if (!!self.parent() {
+        return self.WBS().find( ({ entry.ID }) => entry.ID === self.parent() );
+        
+      } else {
+        return ({entry: new Deliverable(0, '', self.parent(), '0.00', self.currentDate, null, false));
+      }
+      
+    }, this);
 
     /*
      * create new empty record for deliverable on root level
@@ -103,9 +115,8 @@ define([
       
       self.newDeliverable().dateStart(self.current().entry.dateStart());
       
-      self.current({entry: self.newDeliverable});
-      console.log(self.parent());
-      
+      self.parent(self.current());
+
     };
     
     self.setCurrent = function(record){
