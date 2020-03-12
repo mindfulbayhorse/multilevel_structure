@@ -27,7 +27,7 @@ define([
     self.current = ko.observable(false);
     
     //parent deliverable that is detailed with children deliverables
-    self.parent = ko.observable(false);
+    self.parent = ko.observable(0);
     
     //new deliverable
     self.newDeliverable = ko.observable(new Deliverable(0, '', self.parent(), '0.00', self.currentDate, null, false));
@@ -65,13 +65,13 @@ define([
     });
     
     
-    self.calculatedParent = ko.pureComputed(function() {
+    self.calculatedParent = ko.computed(function() {
       
-      if (!!self.parent() {
-        return self.WBS().find( ({ entry.ID }) => entry.ID === self.parent() );
+      if (!!self.parent()) {
+        return self.WBS().find( ({ entry }) => entry.ID === self.parent() );
         
       } else {
-        return ({entry: new Deliverable(0, '', self.parent(), '0.00', self.currentDate, null, false));
+        return {entry: new Deliverable(0, '', self.parent(), '0.00', self.currentDate, null, false)};
       }
       
     }, this);

@@ -157,7 +157,7 @@ require([
     //the flag that current deliverable is the package
     parentTitle: function() {
         return {
-          text: viewWBS.parent.entry.title,
+          text: viewWBS.calculatedParent.entry,
         }
     },
     showErrMsg: {
@@ -172,7 +172,7 @@ require([
       submit: function (){ return false;}
     },
     breakdown: {
-      visible: viewWBS.parent
+      visible: viewWBS.parent() > 0
     }
   };
    
