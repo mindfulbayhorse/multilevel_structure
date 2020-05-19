@@ -3,15 +3,7 @@
  * Olga Zhilkova
  * Provider that controls even handlers of HTML template
  */
-define([
-	'library/knockout'
-], function(ko) {
-  
-  'use scrict';
-
-  // You can now create a bindingProvider that uses something different than
-  // data-bind attributes
-  let Provider = function (bindingObject) {
+export default function (bindingObject) {
     
     this.bindingObject = bindingObject;
 
@@ -57,7 +49,3 @@ define([
       return result;
     };
   };
-  
-  return Provider;
-
-});

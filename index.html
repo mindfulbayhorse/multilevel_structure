@@ -6,14 +6,6 @@
 	<title>WBS for edit</title>
 	<link rel="stylesheet" type="text/css" href="../css/normalize.css" />
     <link href="css/wbs.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet/less" type="text/css" href="../less/rss_theme.less" />
-	<script>
-	 let less = {
-       env: "development",
-       useFileCache: false
-     };
-	 </script>
-	 <script src="js/library/less.js"></script>
 </head>
 <body>
     <div id="top_slogan">
@@ -27,116 +19,136 @@
 	    <div class="right_main">            
 	        <main id="WBS">
 			    
-			    <form id="deliverable" name="deliverable" class="groupped flex_block one_row">
-			    
-			        <div class="flex_block grid_rows col_1">
+			    <form id="deliverable" name="deliverable" method="POST" 
+			    	class="groupped flex_block one_row flex_width" 
+			    	onSubmit="return false;">
 			        
-			            <div class="flex_block one_column">
+			        <input type="hidden" name="deliverableID" 
+			        	data-bind="value: newDeliverable().ID" /> 
+			
+			        <div class="flex_block grid_rows fld_space_30 around_space">
+			        
+			            <div class="flex_block one_column fld_space_100 bottom_space">
 			                <label for="title">Title:</label>
-			                <input maxlength='100' type="text" name="title" data-template='newTitle'/>
+			                <input maxlength='150' type="text" name="title" 
+			                	value="" data-bind="value: newDeliverable().title, 
+			                		valueUpdate: 'input'"/>
 			            </div> 	
 			            
-			            <div class="flex_block one_row">
+			            <div class="flex_block one_row fld_space_100">
 			            
-			              <div class="flex_block one_column">
+			              <div class="flex_block one_column fld_space_45_left">
 			                  <label for="dateStart">Start date:</label>
-			                  <input maxlength='10' type="text" name="dateStart" data-template='newDateStart'/>
+			                  <input maxlength='10' type="text" name="start_date" 
+			                  	value=""  data-bind="value: newDeliverable().dateStart,
+			        				valueUpdate: 'input'" />
 			              </div>
 			              
-			              <div class="flex_block one_column">
+			              <div class="flex_block one_column fld_space_45_right">
 			                  <label for="dateEnd">End date:</label>
-			                  <input maxlength='10' type="text" name="dateEnd" data-template='newDateEnd'/>
+			                  <input maxlength='10' type="text" name="end_date" 
+			                  	value="" data-bind="value: newDeliverable().dateEnd,
+			        				valueUpdate: 'input'" />
 			              </div>
 			              
-			            </div>		        
+			            </div>
 			        </div>
-			        
-			        <div class="flex_block one_column grid_rows col_2">
+				        
+			        <div class="flex_block grid_rows fld_space_30 bottom_top_space">
 			            
-			            <div class="flex_block one_column">
+			            <div class="flex_block one_column fld_space_100 bottom_space">
 			                <label for="cost">Cost:</label>
-			                <input maxlength='10' type="text" name="cost" data-template='newCost'/>
+			                <input maxlength='10' type="text" name="cost" 
+			                	value="" data-bind="value: newDeliverable().cost,
+			        				valueUpdate: 'input'"/>
 			            </div>
 			            
-			            <div class="flex_block one_column">
+			            <div class="flex_block one_column fld_space_100">
 			                <label for="cost">Work amount:</label>
 			                <input maxlength='10' type="text" name="period"/>
 			            </div>
 			            
 			        </div>
 			        
-			        <div class="flex_block one_column grid_rows col_3">
+			        <div class="flex_block grid_rows fld_space_30 around_space">
 			            
-			            <div class="flex_block one_column">
+			            <div class="flex_block one_column fld_space_100">
 			                <label for="parentID">Package is ready:</label>
-			                <input type="checkbox" name="package" data-template='newPackage'/>
+			                <input type="checkbox" name="package" 
+			                	data-bind="checked: newDeliverable().isPackage"/>
 			            </div>
 			            
-			            <div class="flex_block one_column">
-			                <input type="submit" name='create' value="Create" data-template='addNew'/>
+			            <div class="flex_block one_column fld_space_100">
+			                <input type="submit" name='create' value="Create" 
+			                	data-bind='click: addNew'/>
 			            </div>
 			            
 			        </div>
-
 			    </form>
 			    
-			    <div class="action_panel">
-			      <ul data-template='actions'>
-			          <li><button data-template='action'></button></li>
-			      </ul>
-			    </div>
-			    
-			    <table>
-			        <caption>The table shows all deliverables for 
-			             project in the tree</caption>
-			        <thead>
-			            <tr>
-			               <th></th>
-			               <th></th>
-			               <th>Level</th>
-			               <th>Title</th>
-			               <th>Cost</th>
-			               <th>Starts from</th>
-			               <th>Finishes on</th>
-			           </tr>
-			        </thead>
-			        <tbody data-template='deliverables'>
-			         
-			            <tr tabindex='-1' data-template='setCurrent'>
-			            
-			                <th class="actions row_only">
-			                    <button name='openTree'>Fold</button>         
-			                </th>
-			                
-			                <th>
-			                    <input type="radio" name="current">
-			                </th>
-			
-			                <td data-template='recordID'></td>
-			                <td data-template='_index'>
-			                    <input type='text' data-template='recordTitle' 
-			                       form='deliverable' name='title' value='' />
-			                </td>
-			                <td>
-			                    <input type='text' data-template='recordCost' 
-			                       form='deliverable' value='' />
-			                </td>
-			                <td>
-			                    <input type='text' data-template='recordDateStart' 
-			                       form='deliverable' value='' />
-			                </td>
-			                <td>
-			                    <input type='text' data-template='recordDateEnd' 
-			                       form='deliverable' value='' />
-			                </td>
-			            </tr>
-			 
-			        </tbody>
-			    </table>
+				<div class="action_panel" data-bind='visible: actionsBar'>
+				    <ul data-bind='foreach: actions' class="flex_block one_row">
+				      <li><button data-template='action'></button></li>
+				    </ul>
+				</div>
+				<table>
+				    <caption>Work Breakdown structure</caption>
+				    <thead>
+				        <th></th>
+				        <th></th>
+				        <th>Ordinal number</th>
+				        <th>Title</th>
+				        <th>Cost</th>
+				        <th>Start date</th>
+				        <th>End date</th>
+				    </thead>
+				    <tbody data-bind='foreach: wbsAll'>
+				        <tr tabindex='-1' data-bind='hasFocus: entry.isSelected,
+				            class: entry.isActive'>
+				            <th class="actions row_only">
+				                 <button name='openTree'></button>
+				            </th>
+				            <th>
+					             <input type="checkbox" name="current" />
+					        </th>
+				            <td data-bind='text: entry.ID'></td>
+				            <td>
+				            	<div class="flex_block grid_rows field">
+				                	<input type='text' form='deliverable' 
+				                		data-bind="value: entry.title,
+				    						valueUpdate: 'input', class: entry.classTitle"/>
+				                </div>
+					        </td>
+				            <td>
+				            	<div class="flex_block grid_rows field">
+				            		<input type='text' form='deliverable' 
+				            			data-bind="value: entry.cost,
+				        					valueUpdate: 'input'"  />
+				            	</div>
+				                
+					        </td>
+				            <td>
+				            	<div class="flex_block grid_rows field">
+				                	<input type='text' form='deliverable' 
+				                		data-bind="value: entry.dateStart,
+				        					valueUpdate: 'input'"/>
+				                </div>
+					        </td>
+				            <td>
+				            	<div class="flex_block grid_rows field">
+				                    <input type='text' form='deliverable' 
+				                    	data-bind="value: entry.dateEnd,
+				        					valueUpdate: 'input'"/>
+				                </div>
+					        </td>
+				        </tr>
+				    </tbody>
+				
+				</table>
 			    
 			</main>
 	    </div>
 	</div>
-<script data-main="js/main" src="require.js"></script>
+<script src="main.js"></script>
 </body>
 </html>

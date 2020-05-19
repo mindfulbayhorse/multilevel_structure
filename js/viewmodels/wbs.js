@@ -2,15 +2,9 @@
 * Olga Zhilkova
 * view model for WBS template
 */
-define([
-  'library/knockout',
-  'models/deliverable',
-  'models/recordaction'
-], function (ko, Deliverable, Action) {
-  
-  'use strict';
- 
-  let ViewWBS = function (storageWBS) {
+import ko from "knockout";
+import Deliverable from '../models/deliverable.js';
+export default function (storageWBS) {
     
     let self = this;
     
@@ -25,7 +19,7 @@ define([
     
     //current edited or last added deliverable
     self.current = ko.observable(false);
-    
+
     //parent deliverable that is detailed with children deliverables
     self.parent = ko.observable(0);
     
@@ -122,7 +116,7 @@ define([
     self.setCurrent = function(record){
       self.current(record);
 
-      console.log(self.current());
+      console.log(record);
     }
     
     /*
@@ -174,10 +168,13 @@ define([
     }
      
     //validating necessary field to procede with operations on current deliverable
-    self.select = function(record){
-      
-      console.log(record);
-      self.current(record);
+    self.isSelected = function(record){
+    	
+		if (self.current().ID() === record.entry().ID()){
+			return true;
+		}
+			
+		return false;
         
     }
     
@@ -208,7 +205,3 @@ define([
     //}); // save at most twice per second
     
   };
-  
-  return ViewWBS;
-  
-});

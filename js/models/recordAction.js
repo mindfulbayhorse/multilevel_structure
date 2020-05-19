@@ -1,18 +1,9 @@
 /**
  * Deliverables attributes
  * Olga Zhilkova
- * Deliverable primary and secondary data
+ * Actions for each deliverable
  */
-define([
-  'library/knockout',
-], function(ko) {
-
-  'use strict';
-  
-  /*
-   * Action 
-   */
-  let recordAction = function(id, title, exec) {
+export default function(id, title, exec) {
 
     this.id = id;
     this.text = title;
@@ -21,9 +12,4 @@ define([
     
     return this;
     
-  }
-
-
-  return recordAction;
-    
-});
+}

@@ -3,16 +3,8 @@
  * Olga Zhilkova
  * Deliverable primary and secondary data
  */
-define([
-	'library/knockout',
-], function(ko) {
-
-  'use strict';
-
-  /*
-   * Deliverable 
-   */
-  let Deliverable = function(order, title, parentID, cost, dateStart, dateEnd, isPackage) {
+import * as ko from "knockout";
+export default function(order, title, parentID, cost, dateStart, dateEnd, isPackage) {
 
     this.order = ko.observable(order);
     this.title = ko.observable(title);
@@ -53,8 +45,4 @@ define([
 
     return this;
     
-  }
-  
-  return Deliverable;
-    
-});
+}
