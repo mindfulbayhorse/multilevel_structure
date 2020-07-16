@@ -1,0 +1,33 @@
+{
+	"name": "multilevel_structure",
+	"version": "1.0.0",
+	"description": "multilevel structure\r Options for mulivelevl structure table plugin:",
+	"private": true,
+	"main": "./js/main.js",
+	"scripts": {
+		"watch": "npm run development -- --watch",
+		"dev": "npm run development",
+		"development": "npx webpack --config webpack.config.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mindfulbayhorse/multilevel_structure.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/mindfulbayhorse/multilevel_structure/issues"
+	},
+	"homepage": "https://github.com/mindfulbayhorse/multilevel_structure#readme",
+	"devDependencies": {
+		"css-loader": "^3.6.0",
+		"knockout": "^3.5.1",
+		"less": "^3.12.0",
+		"less-loader": "^6.2.0",
+		"mini-css-extract-plugin": "^0.9.0",
+		"style-loader": "^1.2.1",
+		"webpack": "^4.43.0",
+		"webpack-cli": "^3.3.12"
+	}
+}
