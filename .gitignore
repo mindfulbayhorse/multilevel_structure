@@ -5,4 +5,4 @@ tests
 public/main*.js
 public/main*.css
 public/vendor*.js
-conf/
+/conf/
