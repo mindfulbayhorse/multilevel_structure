@@ -5,7 +5,7 @@ const CleaningOldFiles = require("./plugins/cleaning-cached-files");
 module.exports = {
   mode: 'development',
   entry: {
-    main: './js/main.js',
+    main: '.src/js/main.js',
     vendor: ['knockout']
   },
   output: {

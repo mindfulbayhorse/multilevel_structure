@@ -1,3 +1,0 @@
-[submodule "plugins/cleaning-cached-files"]
-	path = plugins/cleaning-cached-files
-	url = git@github.com:mindfulbayhorse/cleaning-cached-files.git

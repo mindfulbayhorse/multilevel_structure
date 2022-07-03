@@ -20,6 +20,8 @@
     "autoprefixer": "^10.4.2",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.2.0",
+    "jasmine-browser-runner": "^1.1.0",
+    "jasmine-core": "^4.2.0",
     "knockout": "^3.5.1",
     "less": "^4.1.2",
     "less-loader": "^10.2.0",
