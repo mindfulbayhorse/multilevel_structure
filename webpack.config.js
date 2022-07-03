@@ -1,27 +1,34 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleaningOldFiles = require("./plugins/cleaning-cached-files");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 
 module.exports = {
   mode: 'development',
   entry: {
-    main: './js/main.js',
+    main: './src/js/main.js',
     vendor: ['knockout']
   },
   output: {
     filename: '[name].[contenthash].js',
-    path: path.resolve(__dirname, 'public'),
+      path: path.resolve(__dirname, 'public'),
+      publicPath: 'http://localhost/multilevel_structure/',
+      clean: true,
+      assetModuleFilename: "[name][ext]",
   },
   optimization: {
     minimize: true,
-    moduleIds: 'deterministic',
+      moduleIds: 'deterministic',
+      runtimeChunk: 'single'
   },
   plugins: [
       new MiniCssExtractPlugin({
         filename: '[name].[hash].css',
         chunkFilename: '[id].css',
       }),
-      new CleaningOldFiles()
+    new HtmlWebpackPlugin({
+        title: 'Output Management',
+    })
       ],
   module: {
     rules: [
@@ -55,7 +62,15 @@ module.exports = {
             plugins: ["@babel/plugin-proposal-class-properties"]
           }
         }
-      }
-    ],
-  },
-};
+        },
+           {
+              test: /\.html$/i,
+              use: [
+                  {
+                      loader: 'html-loader',
+                  },
+              ],
+          },
+    ]
+    }
+}
