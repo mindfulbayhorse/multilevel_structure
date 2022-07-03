@@ -20,6 +20,9 @@
     "autoprefixer": "^10.4.2",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.2.0",
+    "file-loader": "^6.2.0",
+    "html-loader": "^3.1.2",
+    "html-webpack-plugin": "^5.5.0",
     "jasmine-browser-runner": "^1.1.0",
     "jasmine-core": "^4.2.0",
     "knockout": "^3.5.1",
@@ -32,9 +35,13 @@
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.69.1",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.9.2",
+    "webpack-manifest-plugin": "^5.0.0",
+    "webpack-nano": "^1.1.1"
   },
   "dependencies": {
+    "extract-loader": "^5.1.0",
+    "lodash": "^4.17.21",
     "normalize.css": "^8.0.1"
   }
 }

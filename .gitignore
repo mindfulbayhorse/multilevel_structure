@@ -5,5 +5,9 @@ tests
 public/main*.js
 public/main*.css
 public/vendor*.js
+public/runtime*.js
+public/*.json
+public/*.txt
+public/*.html
 /conf/
 .vs/
